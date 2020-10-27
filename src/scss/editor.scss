@@ -1,0 +1,194 @@
+$editor-min-width: 480px;
+
+$column-area-paddings: 8px;
+
+$block-border-width: 1px;
+$block-border-radius: 2px;
+
+$grey-light: #D3D3D3;
+$grey-silver: #C0C0C0;
+$grey-gainsboro: #DCDCDC;
+$blue-deepsky: #00BFFF;
+$blue-royal: #4169E1;
+$blue-darkslate: #483D8B;
+$yellow-lemonchiffon: #FFFACD;
+$yellow-base: #FFFF00;
+$yellow-light: #FFFF78;
+$orange-lighter: #FFE2C4;
+$orange-light: #FFBC78;
+$color-log-normal: #4D1C07;
+$color-log-alert: #E72C17;
+
+$top-banner-height: 48px;
+$title-font-family: "Garamond, EB Garamond, Georgia, serif";
+
+// Global Reset to Access Correct Height
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+// Consider full screen height when doing grid planning.
+html, body {
+  height: 100%;
+  min-height: 640px;
+}
+
+body {
+  background-color: $yellow-lemonchiffon;
+}
+
+// Tags of grid items
+.head-banner-container {
+  grid-area: header;
+}
+.editor-interface-container {
+  grid-area: edit-area;
+}
+
+.editor-interface-block {
+  display: flex;
+  flex-direction: column;
+
+  & > * {
+    box-sizing: border-box;
+  }
+}
+
+// Page Grid Planning
+.editor-main-container {
+  // The first row for top banner, the second takes the rest of container height
+  height: 100%;
+  display: grid;
+  grid-template-rows: $top-banner-height 1fr;
+  grid-template-areas:
+    "header"
+    "edit-area"
+  ;
+  justify-content: stretch;
+  align-content: start;
+
+  & > * {
+    box-sizing: border-box;
+  }
+}
+
+.head-banner {
+  display: flex;
+  background-color: $blue-deepsky;
+  height: 100%;
+
+  .page-title {
+    padding: 4px 0 4px 12px;
+    display: flex;
+    align-items: center;
+    font-family: $title-font-family;
+    line-height: 28px;
+    font-size: 28px;
+    font-weight: bold;
+    color: $grey-light;
+  }
+
+  .option-group {
+    // Trick to automatically push the group to right
+    margin-left: auto;
+    display: flex;
+
+    .option-choice {
+      padding: 4px 12px;
+      display: flex;
+      align-items: center;
+      line-height: 18px;
+      font-size: 18px;
+      color: $grey-light;
+      background-color: $blue-royal;
+
+      &:hover {
+        color: $yellow-base;
+	      background-color: $blue-darkslate;
+	      cursor: pointer;
+      }
+    }
+  }
+}
+
+// (Simple) Grid Planning for the Interface Area
+.grid-row {
+  display: flex;
+  height: 100%;
+
+  .grid-column-half {
+    height: 100%;
+    width: 50%;
+  }
+}
+
+.editor-input-container {
+  height: 100%;
+  padding: $column-area-paddings;
+
+  .edit-area-input {
+    flex-grow: 2;
+    height: 0;
+    width: 100%;
+    overflow-y: scroll;
+    resize: none;
+    padding: 8px;
+    border-width: $block-border-width;
+    border-radius: $block-border-radius;
+    border-color: $grey-silver;
+
+    font-family: Lucida Console, Courier, monospace;
+  }
+
+  .edit-area-log {
+    flex-grow: 1;
+    height: 0;
+    width: 100%;
+    overflow-y: scroll;
+    border-style: solid;
+    border-width: 1px;
+    border-color: $grey-silver;
+    background-color: $orange-lighter;
+
+    .log-row {
+      padding: 2px 4px;
+      &.normal {
+        color: $color-log-normal;
+      }
+      &.alert {
+        color: $color-log-alert;
+      }
+      &:nth-child(even) {
+        background-color: $orange-light;
+      }
+      &:nth-child(odd) {
+        background-color: $yellow-light
+      }
+    }
+  }
+}
+
+.editor-output-container {
+  height: 100%;
+  padding: $column-area-paddings;
+
+  .edit-area-output {
+    height: 100%;
+    overflow-y: scroll;
+    border-style: solid;
+    border-width: $block-border-width;
+    border-radius: $block-border-radius;
+    border-color: $grey-silver;
+    background-color: white;
+  }
+}
+
+// For titles
+.area-title {
+  padding: 4px 0;
+  line-height: 24px;
+  font-size: 24px;
+  font-weight: bold;
+}

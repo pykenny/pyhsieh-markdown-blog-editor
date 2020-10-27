@@ -1,0 +1,39 @@
+{
+  "name": "pyhsieh-markdown-blog-editor",
+  "version": "0.1.0",
+  "description": "Local Markdown editor.",
+  "main": "editor.html",
+  "repository": "git@github.com-pykenny:pykenny/pyhsieh-markdown-blog-editor.git",
+  "author": "Po-Yu Hsieh <pykenny@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "dompurify": "^2.2.0",
+    "express": "^4.17.1",
+    "marked": "^1.2.2",
+    "purecss": "^2.0.3",
+    "tar": "^6.0.5"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.3",
+    "@babel/preset-react": "^7.12.1",
+    "autoprefixer": "^10.0.1",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb": "^18.2.0",
+    "eslint-plugin-import": "^2.21.2",
+    "eslint-plugin-jsx-a11y": "^6.3.0",
+    "eslint-plugin-react": "^7.20.0",
+    "parcel-bundler": "^1.12.4",
+    "postcss": "^8.1.4",
+    "postcss-flexbugs-fixes": "^4.2.1",
+    "postcss-modules": "^3.2.2",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "sass": "^1.27.0"
+  },
+  "scripts": {
+    "dev": "parcel src/views/editor.html",
+    "cleanup": "rm -rf .cache dist",
+    "build": "yarn cleanup && parcel build src/views/editor.html"
+  }
+}
