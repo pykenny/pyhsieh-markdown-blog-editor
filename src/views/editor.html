@@ -1,15 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
+  <meta http-equiv="X-UA-Compatible">
   <meta charset="utf-8">
   <title>Markdown Editor</title>
-  <link rel="stylesheet" href="../../node_modules/purecss/build/base-min.css" type="text/css"/>
-  <link rel="stylesheet" href="../scss/editor.scss" type="text/css"/>
-  <script src="../js/App.jsx"/>
+  <link rel="stylesheet" href="../../node_modules/purecss/build/base-min.css">
+  <link rel="stylesheet" href="../scss/editor.scss">
 </head>
 
 <body>
+  <!-- It need to be placed at the end of document body! -->
+  <div class="editor-main-container" id="markdownEditorApp"/>
+  <script src="../js/App.jsx"></script>
 </body>
 
 </html>
