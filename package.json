@@ -8,14 +8,20 @@
   "license": "MIT",
   "private": false,
   "dependencies": {
+    "axios": "^0.21.0",
     "dompurify": "^2.2.0",
     "express": "^4.17.1",
     "marked": "^1.2.2",
+    "prop-types": "^15.7.2",
     "purecss": "^2.0.3",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "strftime": "^0.10.0",
     "tar": "^6.0.5"
   },
   "devDependencies": {
     "@babel/core": "^7.12.3",
+    "@babel/preset-env": "^7.12.1",
     "@babel/preset-react": "^7.12.1",
     "autoprefixer": "9.8.6",
     "eslint": "^5.16.0",
@@ -28,8 +34,6 @@
     "postcss": "^8.1.4",
     "postcss-flexbugs-fixes": "^4.2.1",
     "postcss-modules": "^3.2.2",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
     "sass": "^1.27.0"
   },
   "scripts": {
