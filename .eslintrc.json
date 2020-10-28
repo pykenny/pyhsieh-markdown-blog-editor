@@ -20,5 +20,6 @@
         "react"
     ],
     "rules": {
+      "react/no-danger": "warn"
     }
 }

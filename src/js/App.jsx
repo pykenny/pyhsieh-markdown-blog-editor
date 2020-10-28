@@ -5,4 +5,4 @@ import MarkdownEditor from './MarkdownEditor';
 
 import '../scss/editor.scss';
 
-ReactDOM.render(<MarkdownEditor/>, document.getElementById('markdownEditorApp'));
+ReactDOM.render(<MarkdownEditor />, document.getElementById('markdownEditorApp'));

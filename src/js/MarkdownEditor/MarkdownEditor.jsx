@@ -9,11 +9,16 @@ class MarkdownEditor extends React.Component {
   constructor(props) {
     super(props);
     this.bundleDocument = this.bundleDocument.bind(this);
+    this.onEditChange = this.onEditChange.bind(this);
     this.onLogUpdate = this.onLogUpdate.bind(this);
     this.state = {
-      documentText: '## Sample Article\n### Chapter 1\nMary has a little lanb.\n',
+      documentText: '',
       logHistory: [],
     };
+  }
+
+  onEditChange(documentText) {
+    this.setState(() => ({ documentText }));
   }
 
   onLogUpdate(message, msgType) {
@@ -32,14 +37,18 @@ class MarkdownEditor extends React.Component {
   }
 
   render() {
-    const { logHistory } = this.state;
+    const { documentText, logHistory } = this.state;
     return (
       <>
         <Banner
           optionBundleEnabled
           optionBundleOnClick={this.bundleDocument}
         />
-        <Editor logRecords={logHistory} />
+        <Editor
+          onEditChange={this.onEditChange}
+          logRecords={logHistory}
+          markdownStr={documentText}
+        />
       </>
     );
   }
