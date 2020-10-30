@@ -35,8 +35,8 @@ function isValidAlias(str) {
     }
     pos++;
   }
-  // Alias can't be empty string
-  return !(pos === max);
+  // Alias can't be an empty string
+  return !(pos === 0);
 }
 
 function parseAlias(str, pos, max, exitCharCodeList) {
@@ -218,7 +218,7 @@ function imageWithAlias(state, silent) {
     } else {
       pos = labelEnd + 1;
     }
-
+    console.log(`Extracted label: ${label}`);
     // covers label === '' and label === undefined
     // (collapsed reference link and shortcut reference link respectively)
     if (!label) { label = state.src.slice(labelStart, labelEnd); }
@@ -302,7 +302,9 @@ function stringOneToOneCheck(a, b, mapA2B, mapB2A, errA, errB) {
   }
 }
 
-function orphanedInstanceCheck(mapA2B, errA) {
+function orphanedStringInstanceCheck(mapA2B, errA) {
+  // The same as stringOneToOneCheck(), it doesn't consider empty string
+  // as valid value.
   forEach(mapA2B, (b, a) => {
     if (!b) {
       errA[a] = true;
@@ -310,6 +312,7 @@ function orphanedInstanceCheck(mapA2B, errA) {
   });
 }
 
+// Constants for accessing parsed tokens.
 const [ATTR_VALUE_IDX] = [1];
 const [IMG_SRC_IDX, IMG_ALIAS_IDX] = [0, 2];
 const IMAGE_TYPE = 'image';
@@ -346,7 +349,7 @@ function validateImageInformation(tokens) {
   }
 
   // Check 2: 'Orphaned' link with no alias
-  orphanedInstanceCheck(linkAliasMapping, errLink);
+  orphanedStringInstanceCheck(linkAliasMapping, errLink);
 
   if (!isEmpty(errLink) || !isEmpty(errAlias)) {
     result = {
