@@ -7,7 +7,9 @@
 
 import MarkdownIt from 'markdown-it';
 import { normalizeReference, isSpace } from 'markdown-it/lib/common/utils';
-import { isArray, includes } from 'lodash';
+import {
+  isArray, includes, isEmpty, forEach,
+} from 'lodash';
 
 function isValidAliasChar(code, isStartChar) {
   /* Currently alias only allows string that fits the regex below:
@@ -265,6 +267,101 @@ function imageWithAlias(state, silent) {
   return true;
 }
 
+function stringOneToOneCheck(a, b, mapA2B, mapB2A, errA, errB) {
+  // Using two mappings to find out violation of one-to-one relationship.
+  // Errors A having multiple relationships with B will be recorded as a
+  // [NAME_A]-[List of NAME_Bs] pair in errA, and vice versa.
+  //
+  // Here we assume only non-empty strings take participate in the relations.
+  // For orphaned singleton, it will create record in one of the mappings,
+  // after validated by methods like orphanedInstanceCheck(), we can later
+  // inference the bound value from the created mappings (mapA2B, mapB2A).
+
+  if (a) {
+    if ((!(a in mapA2B)) || (!mapA2B[a])) {
+      mapA2B[a] = b;
+    } else if (b && (b !== mapA2B[a])) {
+      if (!(a in errA)) {
+        errA[a] = [b];
+      } else {
+        errA[a].push(b);
+      }
+    }
+  }
+
+  if (b) {
+    if ((!(b in mapB2A)) || (!mapB2A[b])) {
+      mapB2A[b] = a;
+    } else if (a && (a !== mapB2A[b])) {
+      if (!(b in errB)) {
+        errB[b] = [a];
+      } else {
+        errB[b].push(a);
+      }
+    }
+  }
+}
+
+function orphanedInstanceCheck(mapA2B, errA) {
+  forEach(mapA2B, (b, a) => {
+    if (!b) {
+      errA[a] = true;
+    }
+  });
+}
+
+const [ATTR_VALUE_IDX] = [1];
+const [IMG_SRC_IDX, IMG_ALIAS_IDX] = [0, 2];
+const IMAGE_TYPE = 'image';
+const INLINE_TYPE = 'inline';
+
+function validateImageInformation(tokens) {
+  const linkAliasMapping = {};
+  const aliasLinkMapping = {};
+  const errLink = {};
+  const errAlias = {};
+  let traversalStack = [...tokens];
+  let item;
+  let src;
+  let alias;
+  let result = {
+    pass: true,
+    errLink: undefined,
+    errAlias: undefined,
+    aliasLinkMapping: undefined,
+  };
+
+  while (!isEmpty(traversalStack)) {
+    item = traversalStack.pop();
+    // We only care about inline, and top layer info of image
+    if (item.type === INLINE_TYPE) {
+      traversalStack = traversalStack.concat(item.children);
+    } else if (item.type === IMAGE_TYPE) {
+      src = item.attrs[IMG_SRC_IDX][ATTR_VALUE_IDX];
+      alias = item.attrs[IMG_ALIAS_IDX][ATTR_VALUE_IDX];
+      stringOneToOneCheck(
+        src, alias, linkAliasMapping, aliasLinkMapping, errLink, errAlias,
+      );
+    }
+  }
+
+  // Check 2: 'Orphaned' link with no alias
+  orphanedInstanceCheck(linkAliasMapping, errLink);
+
+  if (!isEmpty(errLink) || !isEmpty(errAlias)) {
+    result = {
+      ...result,
+      pass: false,
+      errLink,
+      errAlias,
+    };
+    return result;
+  }
+
+  result = { ...result, aliasLinkMapping };
+  return result;
+}
+
 function createDocumentParser() {
   // Default parser settings with img parser overwritten
   const parser = MarkdownIt();
@@ -274,7 +371,33 @@ function createDocumentParser() {
 
 function parseDocument(str, psr) {
   const parser = psr || createDocumentParser();
-  return parser.render(str);
+  const env = {};
+  const parsedStructure = parser.parse(str, env);
+  const validationResult = validateImageInformation(parsedStructure);
+  let result = {
+    pass: true,
+    parsedHTML: undefined,
+    errors: undefined,
+  };
+
+  if (!validationResult.pass) {
+    result = {
+      ...result,
+      pass: false,
+      errors: {
+        imageLink: validationResult.errLink,
+        imageAlias: validationResult.errAlias,
+      },
+    };
+  } else {
+    result = {
+      ...result,
+      pass: true,
+      parsedHTML: parser.renderer.render(parsedStructure, {}, env),
+    };
+  }
+
+  return result;
 }
 
 export {
