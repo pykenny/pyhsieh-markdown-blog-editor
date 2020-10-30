@@ -218,7 +218,6 @@ function imageWithAlias(state, silent) {
     } else {
       pos = labelEnd + 1;
     }
-    console.log(`Extracted label: ${label}`);
     // covers label === '' and label === undefined
     // (collapsed reference link and shortcut reference link respectively)
     if (!label) { label = state.src.slice(labelStart, labelEnd); }
