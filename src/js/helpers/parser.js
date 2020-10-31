@@ -10,6 +10,9 @@ import { normalizeReference, isSpace } from 'markdown-it/lib/common/utils';
 import {
   isArray, includes, isEmpty, forEach,
 } from 'lodash';
+import urljoin from 'url-join';
+
+import APIS from '../apis';
 
 function isValidAliasChar(code, isStartChar) {
   /* Currently alias only allows string that fits the regex below:
@@ -266,6 +269,24 @@ function imageWithAlias(state, silent) {
   return true;
 }
 
+function imageRenderWithLocalRoute(tokens, idx, options, env, slf) {
+  const token = tokens[idx];
+  const srcAttrIndex = token.attrIndex('src');
+
+  // Twist the URL link a little bit
+  // (all need to be sourced from our image server)
+  token.attrs[srcAttrIndex][1] = urljoin(
+    APIS.LOCAL_IMAGE_API_ROUTE, token.attrs[srcAttrIndex][1],
+  );
+
+  // Keep default renderer's behavior
+  token.attrs[token.attrIndex('alt')][1] = slf.renderInlineAsText(
+    token.children, options, env,
+  );
+
+  return slf.renderToken(tokens, idx, options);
+}
+
 function stringOneToOneCheck(a, b, mapA2B, mapB2A, errA, errB) {
   // Using two mappings to find out violation of one-to-one relationship.
   // Errors A having multiple relationships with B will be recorded as a
@@ -365,9 +386,10 @@ function validateImageInformation(tokens) {
 }
 
 function createDocumentParser() {
-  // Default parser settings with img parser overwritten
+  // Overwrite default parser/render on image component
   const parser = MarkdownIt();
   parser.inline.ruler.at('image', imageWithAlias);
+  parser.renderer.rules.image = imageRenderWithLocalRoute;
   return parser;
 }
 

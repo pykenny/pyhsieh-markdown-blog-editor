@@ -20,6 +20,19 @@
         "react"
     ],
     "rules": {
-      "react/no-danger": "warn"
+      "react/no-danger": "warn",
+      "import/extensions": [
+        "error",
+        "always",
+        {
+          "js": "never",
+          "mjs": "never"
+        }
+      ]
+    },
+    "settings": {
+      "import/resolver": {
+        "node": { "extensions": [".js", ".mjs"] }
+      }
     }
 }

@@ -1,3 +1,7 @@
+# ~ Project specific settings ~
+server/img/
+
+# ~ GitHub's Node ignore settings
 # Logs
 logs
 *.log

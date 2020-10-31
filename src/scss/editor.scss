@@ -175,7 +175,8 @@ body {
   padding: $column-area-paddings;
 
   .edit-area-output {
-    height: 100%;
+    flex-grow: 1;
+    height: 0;
     overflow-y: scroll;
     border-style: solid;
     border-width: $block-border-width;

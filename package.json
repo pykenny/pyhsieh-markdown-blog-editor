@@ -19,7 +19,9 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "strftime": "^0.10.0",
-    "tar": "^6.0.5"
+    "tar": "^6.0.5",
+    "url-join": "^4.0.1",
+    "yargs": "^16.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.3",
@@ -28,6 +30,7 @@
     "autoprefixer": "9.8.6",
     "eslint": "^5.16.0",
     "eslint-config-airbnb": "^18.2.0",
+    "eslint-import-resolver-node": "^0.3.4",
     "eslint-plugin-import": "^2.21.2",
     "eslint-plugin-jsx-a11y": "^6.3.0",
     "eslint-plugin-react": "^7.20.0",
@@ -39,7 +42,7 @@
     "sass": "^1.27.0"
   },
   "scripts": {
-    "dev": "parcel src/views/editor.html --port 3000",
+    "dev": "node server/server.js",
     "cleanup": "rm -rf .cache dist",
     "build": "yarn cleanup && parcel build src/views/editor.html"
   }
