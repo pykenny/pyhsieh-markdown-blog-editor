@@ -1,0 +1,296 @@
+@mixin fontinfo {
+  // === Vollkorn ===
+  @font-face {
+     font-family: "Vollkorn";
+     font-style: normal;
+     font-weight: 400;
+     src: local("Vollkorn"), local("Vollkorn-Regular"),
+       url("../fonts/Vollkorn/static/Vollkorn-Regular.eot?#") format("eot"),
+       url("../fonts/Vollkorn/static/Vollkorn-Regular.ttf") format("truetype");
+  }
+  @font-face {
+     font-family: "Vollkorn";
+     font-style: italic;
+     font-weight: 400;
+     src: local("Vollkorn"), local("Vollkorn-Italic"),
+       url("../fonts/Vollkorn/static/Vollkorn-Italic.eot?#") format("eot"),
+       url("../fonts/Vollkorn/static/Vollkorn-Italic.ttf") format("truetype");
+  }
+  @font-face {
+     font-family: "Vollkorn";
+     font-style: normal;
+     font-weight: 500;
+     src: local("Vollkorn"), local("Vollkorn-Medium"),
+       url("../fonts/Vollkorn/static/Vollkorn-Medium.eot?#") format("eot"),
+       url("../fonts/Vollkorn/static/Vollkorn-Medium.ttf") format("truetype");
+  }
+  @font-face {
+     font-family: "Vollkorn";
+     font-style: italic;
+     font-weight: 500;
+     src: local("Vollkorn"), local("Vollkorn-MediumItalic"),
+       url("../fonts/Vollkorn/static/Vollkorn-MediumItalic.eot?#") format("eot"),
+       url("../fonts/Vollkorn/static/Vollkorn-MediumItalic.ttf") format("truetype");
+  }
+  @font-face {
+     font-family: "Vollkorn";
+     font-style: normal;
+     font-weight: 600;
+     src: local("Vollkorn"), local("Vollkorn-SemiBold"),
+       url("../fonts/Vollkorn/static/Vollkorn-SemiBold.eot?#") format("eot"),
+       url("../fonts/Vollkorn/static/Vollkorn-SemiBold.ttf") format("truetype");
+  }
+  @font-face {
+     font-family: "Vollkorn";
+     font-style: italic;
+     font-weight: 600;
+     src: local("Vollkorn"), local("Vollkorn-SemiBoldItalic"),
+       url("../fonts/Vollkorn/static/Vollkorn-SemiBoldItalic.eot?#") format("eot"),
+       url("../fonts/Vollkorn/static/Vollkorn-SemiBoldItalic.ttf") format("truetype");
+  }
+  @font-face {
+     font-family: "Vollkorn";
+     font-style: normal;
+     font-weight: 700;
+     src: local("Vollkorn"), local("Vollkorn-Bold"),
+       url("../fonts/Vollkorn/static/Vollkorn-Bold.eot?#") format("eot"),
+       url("../fonts/Vollkorn/static/Vollkorn-Bold.ttf") format("truetype");
+  }
+  @font-face {
+     font-family: "Vollkorn";
+     font-style: italic;
+     font-weight: 700;
+     src: local("Vollkorn"), local("Vollkorn-BoldItalic"),
+       url("../fonts/Vollkorn/static/Vollkorn-BoldItalic.eot?#") format("eot"),
+       url("../fonts/Vollkorn/static/Vollkorn-BoldItalic.ttf") format("truetype");
+  }
+  @font-face {
+     font-family: "Vollkorn";
+     font-style: normal;
+     font-weight: 800;
+     src: local("Vollkorn"), local("Vollkorn-ExtraBold"),
+       url("../fonts/Vollkorn/static/Vollkorn-ExtraBold.eot?#") format("eot"),
+       url("../fonts/Vollkorn/static/Vollkorn-ExtraBold.ttf") format("truetype");
+  }
+  @font-face {
+     font-family: "Vollkorn";
+     font-style: italic;
+     font-weight: 800;
+     src: local("Vollkorn"), local("Vollkorn-ExtraBoldItalic"),
+       url("../fonts/Vollkorn/static/Vollkorn-ExtraBold.eot?#") format("eot"),
+       url("../fonts/Vollkorn/static/Vollkorn-ExtraBold.ttf") format("truetype");
+  }
+  @font-face {
+     font-family: "Vollkorn";
+     font-style: normal;
+     font-weight: 900;
+     src: local("Vollkorn"), local("Vollkorn-Black"),
+       url("../fonts/Vollkorn/static/Vollkorn-Black.eot?#") format("eot"),
+       url("../fonts/Vollkorn/static/Vollkorn-Black.ttf") format("truetype");
+  }
+  @font-face {
+     font-family: "Vollkorn";
+     font-style: italic;
+     font-weight: 900;
+     src: local("Vollkorn"), local("Vollkorn-BlackItalic"),
+       url("../fonts/Vollkorn/static/Vollkorn-BlackItalic.eot?#") format("eot"),
+       url("../fonts/Vollkorn/static/Vollkorn-BlackItalic.ttf") format("truetype");
+  }
+
+  // === Red Hat Display ===
+  @font-face {
+     font-family: "Red Hat Display";
+     font-style: normal;
+     font-weight: 400;
+     src: local("Red Hat Display"), local("RedHatDisplay-Regular"),
+       url("../fonts/Red_Hat_Display/RedHatDisplay-Regular.eot?#") format("eot"),
+       url("../fonts/Red_Hat_Display/RedHatDisplay-Regular.ttf") format("truetype");
+  }
+  @font-face {
+     font-family: "Red Hat Display";
+     font-style: italic;
+     font-weight: 400;
+     src: local("Red Hat Display"), local("RedHatDisplay-Italic"),
+       url("../fonts/Red_Hat_Display/RedHatDisplay-Italic.eot?#") format("eot"),
+       url("../fonts/Red_Hat_Display/RedHatDisplay-Italic.ttf") format("truetype");
+  }
+  @font-face {
+     font-family: "Red Hat Display";
+     font-style: normal;
+     font-weight: 500;
+     src: local("Red Hat Display"), local("RedHatDisplay-Medium"),
+       url("../fonts/Red_Hat_Display/RedHatDisplay-Medium.eot?#") format("eot"),
+       url("../fonts/Red_Hat_Display/RedHatDisplay-Medium.ttf") format("truetype");
+  }
+  @font-face {
+     font-family: "Red Hat Display";
+     font-style: italic;
+     font-weight: 500;
+     src: local("Red Hat Display"), local("RedHatDisplay-MediumItalic"),
+       url("../fonts/Red_Hat_Display/RedHatDisplay-MediumItalic.eot?#") format("eot"),
+       url("../fonts/Red_Hat_Display/RedHatDisplay-MediumItalic.ttf") format("truetype");
+  }
+  @font-face {
+     font-family: "Red Hat Display";
+     font-style: normal;
+     font-weight: 700;
+     src: local("Red Hat Display"), local("RedHatDisplay-Bold"),
+       url("../fonts/Red_Hat_Display/RedHatDisplay-Bold.eot?#") format("eot"),
+       url("../fonts/Red_Hat_Display/RedHatDisplay-Bold.ttf") format("truetype");
+  }
+  @font-face {
+     font-family: "Red Hat Display";
+     font-style: italic;
+     font-weight: 700;
+     src: local("Red Hat Display"), local("RedHatDisplay-BoldItalic"),
+       url("../fonts/Red_Hat_Display/RedHatDisplay-BoldItalic.eot?#") format("eot"),
+       url("../fonts/Red_Hat_Display/RedHatDisplay-BoldItalic.ttf") format("truetype");
+  }
+  @font-face {
+     font-family: "Red Hat Display";
+     font-style: normal;
+     font-weight: 900;
+     src: local("Red Hat Display"), local("RedHatDisplay-Black"),
+       url("../fonts/Red_Hat_Display/RedHatDisplay-Black.eot?#") format("eot"),
+       url("../fonts/Red_Hat_Display/RedHatDisplay-Black.ttf") format("truetype");
+  }
+  @font-face {
+     font-family: "Red Hat Display";
+     font-style: italic;
+     font-weight: 900;
+     src: local("Red Hat Display"), local("RedHatDisplay-BlackItalic"),
+       url("../fonts/Red_Hat_Display/RedHatDisplay-BlackItalic.eot?#") format("eot"),
+       url("../fonts/Red_Hat_Display/RedHatDisplay-BlackItalic.ttf") format("truetype");
+  }
+
+  // === Crimson Pro ===
+  @font-face {
+     font-family: "Crimson Pro";
+     font-style: normal;
+     font-weight: 200;
+     src: local("Crimson Pro"), local("CrimsonPro-ExtraLight"),
+       url("../fonts/Crimson_Pro/static/CrimsonPro-ExtraLight.eot?#") format("eot"),
+       url("../fonts/Crimson_Pro/static/CrimsonPro-Extralight.ttf") format("truetype");
+  }
+  @font-face {
+     font-family: "Crimson Pro";
+     font-style: italic;
+     font-weight: 200;
+     src: local("Crimson Pro"), local("CrimsonPro-ExtraLightItalic"),
+       url("../fonts/Crimson_Pro/static/CrimsonPro-ExtraLightItalic.eot?#") format("eot"),
+       url("../fonts/Crimson_Pro/static/CrimsonPro-ExtraLightItalic.ttf") format("truetype");
+  }
+  @font-face {
+     font-family: "Crimson Pro";
+     font-style: normal;
+     font-weight: 300;
+     src: local("Crimson Pro"), local("CrimsonPro-Light"),
+       url("../fonts/Crimson_Pro/static/CrimsonPro-Light.eot?#") format("eot"),
+       url("../fonts/Crimson_Pro/static/CrimsonPro-Light.ttf") format("truetype");
+  }
+  @font-face {
+     font-family: "Crimson Pro";
+     font-style: italic;
+     font-weight: 300;
+     src: local("Crimson Pro"), local("CrimsonPro-LightItalic"),
+       url("../fonts/Crimson_Pro/static/CrimsonPro-LightItalic.eot?#") format("eot"),
+       url("../fonts/Crimson_Pro/static/CrimsonPro-LightItalic.ttf") format("truetype");
+  }
+  @font-face {
+     font-family: "Crimson Pro";
+     font-style: normal;
+     font-weight: 400;
+     src: local("Crimson Pro"), local("CrimsonPro-Regular"),
+       url("../fonts/Crimson_Pro/static/CrimsonPro-Regular.eot?#") format("eot"),
+       url("../fonts/Crimson_Pro/static/CrimsonPro-Regular.ttf") format("truetype");
+  }
+  @font-face {
+     font-family: "Crimson Pro";
+     font-style: italic;
+     font-weight: 400;
+     src: local("Crimson Pro"), local("CrimsonPro-Italic"),
+       url("../fonts/Crimson_Pro/static/CrimsonPro-Italic.eot?#") format("eot"),
+       url("../fonts/Crimson_Pro/static/CrimsonPro-Italic.ttf") format("truetype");
+  }
+  @font-face {
+     font-family: "Crimson Pro";
+     font-style: normal;
+     font-weight: 500;
+     src: local("Crimson Pro"), local("CrimsonPro-Medium"),
+       url("../fonts/Crimson_Pro/static/CrimsonPro-Medium.eot?#") format("eot"),
+       url("../fonts/Crimson_Pro/static/CrimsonPro-Medium.ttf") format("truetype");
+  }
+  @font-face {
+     font-family: "Crimson Pro";
+     font-style: italic;
+     font-weight: 500;
+     src: local("Crimson Pro"), local("CrimsonPro-MediumItalic"),
+       url("../fonts/Crimson_Pro/static/CrimsonPro-MediumItalic.eot?#") format("eot"),
+       url("../fonts/Crimson_Pro/static/CrimsonPro-MediumItalic.ttf") format("truetype");
+  }
+  @font-face {
+     font-family: "Crimson Pro";
+     font-style: normal;
+     font-weight: 600;
+     src: local("Crimson Pro"), local("CrimsonPro-SemiBold"),
+       url("../fonts/Crimson_Pro/static/CrimsonPro-SemiBold.eot?#") format("eot"),
+       url("../fonts/Crimson_Pro/static/CrimsonPro-SemiBold.ttf") format("truetype");
+  }
+  @font-face {
+     font-family: "Crimson Pro";
+     font-style: italic;
+     font-weight: 600;
+     src: local("Crimson Pro"), local("CrimsonPro-SemiBoldItalic"),
+       url("../fonts/Crimson_Pro/static/CrimsonPro-SemiBoldItalic.eot?#") format("eot"),
+       url("../fonts/Crimson_Pro/static/CrimsonPro-SemiBoldItalic.ttf") format("truetype");
+  }
+  @font-face {
+     font-family: "Crimson Pro";
+     font-style: normal;
+     font-weight: 700;
+     src: local("Crimson Pro"), local("CrimsonPro-Bold"),
+       url("../fonts/Crimson_Pro/static/CrimsonPro-Bold.eot?#") format("eot"),
+       url("../fonts/Crimson_Pro/static/CrimsonPro-Bold.ttf") format("truetype");
+  }
+  @font-face {
+     font-family: "Crimson Pro";
+     font-style: italic;
+     font-weight: 700;
+     src: local("Crimson Pro"), local("CrimsonPro-BoldItalic"),
+       url("../fonts/Crimson_Pro/static/CrimsonPro-BoldItalic.eot?#") format("eot"),
+       url("../fonts/Crimson_Pro/static/CrimsonPro-BoldItalic.ttf") format("truetype");
+  }
+  @font-face {
+     font-family: "Crimson Pro";
+     font-style: normal;
+     font-weight: 800;
+     src: local("Crimson Pro"), local("CrimsonPro-ExtraBold"),
+       url("../fonts/Crimson_Pro/static/CrimsonPro-ExtraBold.eot?#") format("eot"),
+       url("../fonts/Crimson_Pro/static/CrimsonPro-ExtraBold.ttf") format("truetype");
+  }
+  @font-face {
+     font-family: "Crimson Pro";
+     font-style: italic;
+     font-weight: 800;
+     src: local("Crimson Pro"), local("CrimsonPro-ExtraBoldItalic"),
+       url("../fonts/Crimson_Pro/static/CrimsonPro-ExtraBold.eot?#") format("eot"),
+       url("../fonts/Crimson_Pro/static/CrimsonPro-ExtraBold.ttf") format("truetype");
+  }
+  @font-face {
+     font-family: "Crimson Pro";
+     font-style: normal;
+     font-weight: 900;
+     src: local("Crimson Pro"), local("CrimsonPro-Black"),
+       url("../fonts/Crimson_Pro/static/CrimsonPro-Black.eot?#") format("eot"),
+       url("../fonts/Crimson_Pro/static/CrimsonPro-Black.ttf") format("truetype");
+  }
+  @font-face {
+     font-family: "Crimson Pro";
+     font-style: italic;
+     font-weight: 900;
+     src: local("Crimson Pro"), local("CrimsonPro-BlackItalic"),
+       url("../fonts/Crimson_Pro/static/CrimsonPro-BlackItalic.eot?#") format("eot"),
+       url("../fonts/Crimson_Pro/static/CrimsonPro-BlackItalic.ttf") format("truetype");
+  }
+
+}

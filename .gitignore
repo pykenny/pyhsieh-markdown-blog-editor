@@ -1,5 +1,6 @@
 # ~ Project specific settings ~
 server/img/
+.parcel-cache
 
 # ~ GitHub's Node ignore settings
 # Logs

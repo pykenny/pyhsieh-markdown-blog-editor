@@ -1,0 +1,16 @@
+/* Layout for GitHub-Flavoured Markdown */
+@mixin markdown {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Red Hat Display";
+  }
+
+  p, blockquote {
+    font-family: "Crimson Pro";
+    font-weight: 300;
+  }
+}

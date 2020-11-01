@@ -60,12 +60,14 @@ class Editor extends React.Component {
   render() {
     const { onEditChange, logRecords, markdownStr } = this.props;
     let htmlStr = '';
+    let passed = true;
 
     if (markdownStr) {
-      const parsedResult = parseDocument(markdownStr, this.parser);
-      htmlStr = (parsedResult.pass)
-        ? parsedResult.parsedHTML
-        : createErrorMessage(parsedResult.errors);
+      const { pass, parsedHTML, errors } = parseDocument(markdownStr, this.parser);
+      passed = pass;
+      htmlStr = (passed)
+        ? parsedHTML
+        : createErrorMessage(errors);
     }
 
     return (
@@ -79,7 +81,7 @@ class Editor extends React.Component {
           </div>
           <div className="editor-interface-block grid-column-half editor-output-container">
             <div className="area-title">Parsed Result</div>
-            <PreviewArea htmlStr={htmlStr} />
+            <PreviewArea htmlStr={htmlStr} passed={passed} />
           </div>
         </div>
       </div>

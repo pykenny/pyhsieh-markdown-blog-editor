@@ -1,3 +1,8 @@
+@use "markdown";
+@use "fonts";
+
+@include fonts.fontinfo;
+
 $editor-min-width: 480px;
 
 $column-area-paddings: 8px;
@@ -184,6 +189,15 @@ body {
     border-color: $grey-silver;
     background-color: white;
   }
+}
+
+.preview-content {
+  margin: 4px;
+  border-width: 1px;
+  border-style: dotted;
+  border-color: $grey-light;
+
+  @include markdown.markdown;
 }
 
 // For titles
