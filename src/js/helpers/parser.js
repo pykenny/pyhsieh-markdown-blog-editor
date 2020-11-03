@@ -12,6 +12,7 @@ import {
 } from 'lodash';
 import urljoin from 'url-join';
 
+import highlight from './syntax_highlight';
 import APIS from '../apis';
 
 function isValidAliasChar(code, isStartChar) {
@@ -284,7 +285,13 @@ function imageRenderWithLocalRoute(tokens, idx, options, env, slf) {
     token.children, options, env,
   );
 
-  return slf.renderToken(tokens, idx, options);
+  const imageElement = slf.renderToken(tokens, idx, options);
+  const titleIndex = token.attrIndex('title');
+  const titleElement = (titleIndex >= 0)
+    ? `<div class="caption">${token.attrs[titleIndex][1]}</div>`
+    : '';
+
+  return `<div class="image-container">${imageElement}${titleElement}</div>`;
 }
 
 function stringOneToOneCheck(a, b, mapA2B, mapB2A, errA, errB) {
@@ -386,8 +393,12 @@ function validateImageInformation(tokens) {
 }
 
 function createDocumentParser() {
+  // Set up syntax highlighter
+  const parser = MarkdownIt({
+    breaks: true,
+    highlight,
+  });
   // Overwrite default parser/render on image component
-  const parser = MarkdownIt();
   parser.inline.ruler.at('image', imageWithAlias);
   parser.renderer.rules.image = imageRenderWithLocalRoute;
   return parser;
@@ -417,7 +428,7 @@ function parseDocument(str, psr) {
     result = {
       ...result,
       pass: true,
-      parsedHTML: parser.renderer.render(parsedStructure, {}, env),
+      parsedHTML: parser.renderer.render(parsedStructure, psr.options, env),
     };
   }
 

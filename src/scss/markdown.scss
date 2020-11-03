@@ -1,5 +1,17 @@
 /* Layout for GitHub-Flavoured Markdown */
+$green-darker-olive: #2B3618;
+$green-dark-olive: #556B2F;
+$yellow-light: #FFFFE0;
+$yellow-papayawhip: #FFEFD5;
+$grey-light: #D3D3D3;
+$grey-lighter: #EDEDED;
+
 @mixin markdown {
+  // Reset margins
+  * {
+    margin: 0;
+  }
+
   h1,
   h2,
   h3,
@@ -9,8 +21,155 @@
     font-family: "Red Hat Display";
   }
 
-  p, blockquote {
+  h1,
+  h2,
+  h3 {
+    margin: 0.5em 0 0.3em 0;
+  }
+
+  h4,
+  h5,
+  h6 {
+    margin: 0.3em 0 0.3em 0;
+  }
+
+  h1 {
+    font-size: 1.75em;
+  }
+
+  h2 {
+    font-size: 1.5em;
+  }
+
+  h3 {
+    font-size: 1.25em;
+  }
+
+  h4 {
+    font-size: 1.125em;
+  }
+
+  h5 {
+    font-size: 1em;
+  }
+
+  h6 {
+    font-size: 1em;
+    color: #696969;
+  }
+
+  p, blockquote, ol, ul {
     font-family: "Crimson Pro";
+    margin: 0.3em 0 0 0;
+    line-height: 1.25em;
+  }
+
+  p {
+    font-weight: 400;
+    font-size: 1.125em;
+    text-indent: 1em;
+  }
+
+  blockquote {
     font-weight: 300;
+    font-size: 1em;
+    border-style: solid;
+    border-color: $grey-light;
+    border-width: 0 0 0 4px;
+    padding-left: 1em;
+    background-color: $grey-lighter;
+  }
+
+  // we don't do indentation in blockquotes.
+  blockquote p {
+    text-indent: 0;
+    margin: 0.3em 0;
+  }
+
+  hr {
+    border: 0;
+    height: 1px;
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+  }
+
+  a,
+  a:visited {
+    color: $green-darker-olive;
+  }
+
+  a:hover {
+    color: $green-dark-olive;
+    background-color: $yellow-light;
+  }
+
+  a:active {
+    color: $green-dark-olive;
+    background-color: $yellow-papayawhip;
+  }
+
+  // Prevent nested font growth.
+  ol, ul {
+    list-style-position: inside;
+    margin-left: 18px;
+    font-size: 18px;
+  }
+
+  ol {
+    list-style-type: decimal;
+  }
+
+  ul {
+    list-style-type: disc;
+  }
+
+  ol ol ol,
+  ol ul ol,
+  ul ol ol,
+  ul ul ol {
+    list-style-type: lower-alpha;
+  }
+
+  ol ul,
+  ul ul {
+    list-style-type: circle;
+  }
+
+  ol ol ul,
+  ol ul ul,
+  ul ol ul,
+  ul ul ul {
+    list-style-type: disc;
+  }
+
+  // Image
+  .image-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #FFFFFF;
+    padding: 8px;
+
+    // Cap the image if it's too large.
+    img {
+      max-width: 75%;
+    }
+
+    img + .caption {
+      margin-top: 4px;
+      font-family: "Crimson Pro";
+      line-height: 1.25em;
+    }
+  }
+
+  // Inline code. Preindented one will be managed by highightJS
+  code {
+    font-size: 0.85em;
+    line-height: 0.85em;
+    padding: 0 0.25em;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 2px;
+    border-color: $grey-light;
+    background-color: $grey-lighter;
   }
 }
