@@ -114,6 +114,15 @@ body {
 	      background-color: $blue-darkslate;
 	      cursor: pointer;
       }
+
+      &.disabled {
+        background-color: $grey-silver;
+      }
+
+      &.disabled:hover {
+        color: $grey-light;
+        cursor: not-allowed;
+      }
     }
   }
 }

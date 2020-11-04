@@ -18,7 +18,7 @@ class OptionChoice extends React.Component {
     const { enabled, onClick, title } = this.props;
     return (
       <div
-        className="option-choice"
+        className={`option-choice ${(!enabled) ? 'disabled' : ''}`}
         role="button"
         tabIndex={0}
         onClick={enabled && onClick}

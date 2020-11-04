@@ -5,6 +5,8 @@ import Banner from './Banner';
 import Editor from './Editor';
 import Constants from './Constants';
 
+const PARSE_DELAY = 1000;
+
 class MarkdownEditor extends React.Component {
   constructor(props) {
     super(props);
@@ -14,11 +16,22 @@ class MarkdownEditor extends React.Component {
     this.state = {
       documentText: '',
       logHistory: [],
+      pendingUpdateTimerId: undefined,
     };
   }
 
   onEditChange(documentText) {
-    this.setState(() => ({ documentText }));
+    const { pendingUpdateTimerId } = this.state;
+    if (pendingUpdateTimerId !== undefined) {
+      clearTimeout(pendingUpdateTimerId);
+    }
+    const timerId = setTimeout(
+      () => {
+        this.setState(() => ({ documentText, pendingUpdateTimerId: undefined }));
+      },
+      PARSE_DELAY,
+    );
+    this.setState(() => ({ pendingUpdateTimerId: timerId }));
   }
 
   onLogUpdate(message, msgType) {
@@ -37,11 +50,11 @@ class MarkdownEditor extends React.Component {
   }
 
   render() {
-    const { documentText, logHistory } = this.state;
+    const { documentText, logHistory, pendingUpdateTimerId } = this.state;
     return (
       <>
         <Banner
-          optionBundleEnabled
+          optionBundleEnabled={pendingUpdateTimerId === undefined}
           optionBundleOnClick={this.bundleDocument}
         />
         <Editor
