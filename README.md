@@ -1,5 +1,6 @@
 # Markdown-based Blog Post Editor and Bundler
 (Simple) implementation of local post editor that provides preview of parsed Markdown document and bundle the document with images.
+![Current Progress](./images/ProgressPreview_20201105.png)
 
 ## Goal
  - A local web page Markdown editor that parses and provides preview of an input Markdown document.
