@@ -13,7 +13,7 @@ function TitleInput(props) {
         type="text"
         className="edit-area-title-input"
         placeholder="Edit article title here..."
-        onChange={onEditChange}
+        onChange={(evt) => { onEditChange(evt.target.value); }}
       />
     </div>
   );

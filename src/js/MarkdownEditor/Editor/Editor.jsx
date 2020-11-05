@@ -25,8 +25,8 @@ function createErrorMessage(errors) {
               // Array means this link is shared by more than one alias.
               // A 'true' value means this URI has no corresponding alias.
               tempStr += isArray(errData)
-                ? `<p>Err${key}: Image link "${linkURI}" is linked with more than one alias.</p>`
-                : `<p>Err${key}: Image link "${linkURI}" is orphaned. Please assign alias to at least one of the occurences.</p>`;
+                ? `<p>Err-<strong>${key}</strong>: Image link "${linkURI}" is linked with more than one alias.</p>`
+                : `<p>Err-<strong>${key}</strong>: Image link "${linkURI}" is orphaned. Please assign alias to at least one of the occurences.</p>`;
             },
           );
           return result + tempStr;
@@ -37,7 +37,7 @@ function createErrorMessage(errors) {
             errValue,
             (_, aliasName) => {
               // Alias shared by more than one link is the only case here.
-              tempStr += `<p>Err${key}: Alias "${aliasName}" is linked with more than one image link.</p>`;
+              tempStr += `<p>Err-${key}: Alias "${aliasName}" is linked with more than one image link.</p>`;
             },
           );
           return result + tempStr;
@@ -91,7 +91,7 @@ Editor.propTypes = {
       message: PropTypes.string.isRequired,
     }),
   ).isRequired,
-  parseError: PropTypes.instanceOf(Map),
+  parseError: PropTypes.instanceOf(Object),
   previewHTMLStr: PropTypes.string.isRequired,
 };
 

@@ -45,7 +45,7 @@ async function bundlePost(imgDir, outDir, rawDocument, docMeta) {
   }
 
   // Step 2: Copy images and save document/meta to the temp directory
-  const { aliasMapping, title } = docMeta;
+  const { aliasMapping, documentTitle } = docMeta;
   const docOutPath = path.join(tmpFolderPath, DOC_FILENAME);
   const metaOutPath = path.join(tmpFolderPath, META_FILENAME);
 
@@ -73,7 +73,7 @@ async function bundlePost(imgDir, outDir, rawDocument, docMeta) {
 
   // Step 3: Zip and archive the content, then remove temp folder.
   const targetFileName = filenamify(
-    `${title}_${strftime(TIMESTAMP_OUTPUT_FORMAT)}.tgz`,
+    `${documentTitle}_${strftime(TIMESTAMP_OUTPUT_FORMAT)}.tgz`,
     { replacement: '_' },
   )
     .replace(/\s/g, '_');

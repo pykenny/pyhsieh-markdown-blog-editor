@@ -83,9 +83,10 @@ class MarkdownEditor extends React.Component {
     if (packedData !== undefined) {
       const { rawDocument, aliasMapping } = packedData;
       const documentMeta = { documentTitle, aliasMapping };
+
       return APIS.bundlePost(rawDocument, documentMeta)
         .then((response) => {
-          const { timeStamp, outputDir } = response;
+          const { timeStamp, outputDir } = response.data;
           const completeMessage = (
             `Created bundle at "${outputDir}". Timestamp: ${timeStamp}.`
           );
@@ -102,6 +103,7 @@ class MarkdownEditor extends React.Component {
           } else {
             console.log('Error before transmission.');
           }
+          console.log(error);
           this.onLogUpdate(
             'Ooops', Constants.EditorMessageType.ERROR,
           );
@@ -113,6 +115,7 @@ class MarkdownEditor extends React.Component {
 
   render() {
     const {
+      documentTitle,
       documentText,
       logHistory,
       pendingUpdateTimerId,
@@ -127,6 +130,7 @@ class MarkdownEditor extends React.Component {
             (pendingUpdateTimerId === undefined)
             && (parseError === undefined)
             && (packedData !== undefined)
+            && (documentTitle !== '')
           }
           optionBundleOnClick={this.bundleDocument}
         />

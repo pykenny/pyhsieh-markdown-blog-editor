@@ -21,6 +21,7 @@ $yellow-base: #FFFF00;
 $yellow-light: #FFFF78;
 $orange-lighter: #FFE2C4;
 $orange-light: #FFBC78;
+$red-dark: #8B0000;
 $color-log-normal: #4D1C07;
 $color-log-alert: #E72C17;
 
@@ -226,6 +227,15 @@ body {
   border-color: $grey-light;
 
   @include markdown.markdown;
+
+  &.error {
+    color: $red-dark;
+    // Cancel indent
+    p {
+      font-size: 14px;
+      text-indent: 0;
+    }
+  }
 }
 
 // For titles

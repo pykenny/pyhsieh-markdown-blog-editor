@@ -6,7 +6,6 @@ const fs = require('fs');
 const yargs = require('yargs/yargs');
 const { hideBin } = require('yargs/helpers');
 const express = require('express');
-const bodyParser = require('body-parser');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
 const postBundler = require('./post_bundler');
@@ -73,23 +72,23 @@ if (
 
 // Start server and redirect requests
 const server = express();
+server.use(express.json());
+
 const parcelMiddleware = createProxyMiddleware({
   target: `http://localhost:${devPort}/`,
 });
 server.use('/img', express.static(argv['img-dir']));
-server.use('/', parcelMiddleware);
-
-// Support JSON request content
-server.use(bodyParser.json());
-server.use(bodyParser.urlencoded({ extended: true }));
 
 server.post('/bundle_document', async (req, res) => {
-  const { rawDocument, documentMeta } = res.body;
+  const { rawDocument, documentMeta } = req.body;
   const result = await postBundler(
     fullImageDir, fullOutputDir, rawDocument, documentMeta,
   );
   res.json(result);
 });
+
+// Redirect others to Parcel service
+server.use('/', parcelMiddleware);
 
 server.listen(servicePort, () => {
   console.log(`Listening to port ${servicePort}...`);
