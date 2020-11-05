@@ -51,7 +51,6 @@ const fullImageDir = Path.normalize(argv['img-dir'].startsWith('.')
   ? Path.join(__dirname, argv['img-dir'])
   : argv['img-dir']);
 
-
 // Force create directory as needed
 if (
   !fs.existsSync(fullImageDir)

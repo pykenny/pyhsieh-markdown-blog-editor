@@ -411,6 +411,7 @@ function parseDocument(str, psr) {
   const validationResult = validateImageInformation(parsedStructure);
   let result = {
     pass: true,
+    aliasMapping: undefined,
     parsedHTML: undefined,
     errors: undefined,
   };
@@ -428,6 +429,7 @@ function parseDocument(str, psr) {
     result = {
       ...result,
       pass: true,
+      aliasMapping: validationResult.aliasLinkMapping,
       parsedHTML: parser.renderer.render(parsedStructure, psr.options, env),
     };
   }

@@ -142,6 +142,26 @@ body {
   height: 100%;
   padding: $column-area-paddings;
 
+  .edit-area-title {
+    display: flex;
+    align-items: center;
+    padding: 8px 0;
+    flex-grow: 0;
+    font-family: Lucida Console, Courier, monospace;
+
+    .edit-area-title-tag {
+      padding: 0 8px 0 0;
+    }
+
+    .edit-area-title-input {
+      flex-grow: 1;
+      padding: 4px;
+      border-width: $block-border-width;
+      border-radius: $block-border-radius;
+      border-color: $grey-silver;
+    }
+  }
+
   .edit-area-input {
     flex-grow: 2;
     height: 0;
@@ -152,7 +172,6 @@ body {
     border-width: $block-border-width;
     border-radius: $block-border-radius;
     border-color: $grey-silver;
-
     font-family: Lucida Console, Courier, monospace;
   }
 

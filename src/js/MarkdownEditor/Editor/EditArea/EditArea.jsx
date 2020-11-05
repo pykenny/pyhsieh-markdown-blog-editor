@@ -1,20 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import TitleInput from './TitleInput';
+import DocTextarea from './DocTextarea';
+
 function EditArea(props) {
-  const { onEditChange } = props;
+  const { onTitleEditChange, onDocumentEditChange } = props;
 
   return (
-    <textarea
-      className="edit-area-input"
-      placeholder="Try type in some Markdown..."
-      onChange={(evt) => { onEditChange(evt.target.value); }}
-    />
+    <>
+      <TitleInput onEditChange={onTitleEditChange} />
+      <DocTextarea onEditChange={onDocumentEditChange} />
+    </>
   );
 }
 
 EditArea.propTypes = {
-  onEditChange: PropTypes.func.isRequired,
+  onTitleEditChange: PropTypes.func.isRequired,
+  onDocumentEditChange: PropTypes.func.isRequired,
 };
 
 export default EditArea;

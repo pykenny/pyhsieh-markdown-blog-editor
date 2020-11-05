@@ -21,8 +21,8 @@ class OptionChoice extends React.Component {
         className={`option-choice ${(!enabled) ? 'disabled' : ''}`}
         role="button"
         tabIndex={0}
-        onClick={enabled && onClick}
-        onKeyDown={enabled && this.focusedCarriageReturnHandler}
+        onClick={enabled ? onClick : undefined}
+        onKeyDown={enabled ? this.focusedCarriageReturnHandler : undefined}
       >
         {title}
       </div>

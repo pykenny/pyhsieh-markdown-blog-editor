@@ -4,8 +4,6 @@ import {
   reduce, isEmpty, forEach, isArray,
 } from 'lodash';
 
-import parseDocument, { createDocumentParser } from '../../helpers/parser';
-
 import LogArea from './LogArea';
 import EditArea from './EditArea';
 import PreviewArea from './PreviewArea';
@@ -51,46 +49,41 @@ function createErrorMessage(errors) {
   );
 }
 
-class Editor extends React.Component {
-  constructor(props) {
-    super(props);
-    this.parser = createDocumentParser();
-  }
+function Editor(props) {
+  const {
+    onTitleEditChange,
+    onDocumentEditChange,
+    logRecords,
+    parseError,
+    previewHTMLStr,
+  } = props;
 
-  render() {
-    const { onEditChange, logRecords, markdownStr } = this.props;
-    let htmlStr = '';
-    let passed = true;
+  const htmlStr = (parseError === undefined)
+    ? previewHTMLStr
+    : createErrorMessage(parseError);
+  const passed = (parseError === undefined);
 
-    if (markdownStr) {
-      const { pass, parsedHTML, errors } = parseDocument(markdownStr, this.parser);
-      passed = pass;
-      htmlStr = (passed)
-        ? parsedHTML
-        : createErrorMessage(errors);
-    }
-
-    return (
-      <div className="editor-interface-container">
-        <div className="grid-row">
-          <div className="editor-interface-block  grid-column-half editor-input-container">
-            <div className="area-title">Editor</div>
-            <EditArea onEditChange={onEditChange} />
-            <div className="area-title">Log</div>
-            <LogArea logRecords={logRecords} />
-          </div>
-          <div className="editor-interface-block grid-column-half editor-output-container">
-            <div className="area-title">Parsed Result</div>
-            <PreviewArea htmlStr={htmlStr} passed={passed} />
-          </div>
+  return (
+    <div className="editor-interface-container">
+      <div className="grid-row">
+        <div className="editor-interface-block  grid-column-half editor-input-container">
+          <div className="area-title">Editor</div>
+          <EditArea {...{ onTitleEditChange, onDocumentEditChange }} />
+          <div className="area-title">Log</div>
+          <LogArea {...{ logRecords }} />
+        </div>
+        <div className="editor-interface-block grid-column-half editor-output-container">
+          <div className="area-title">Parsed Result</div>
+          <PreviewArea {...{ htmlStr, passed }} />
         </div>
       </div>
-    );
-  }
+    </div>
+  );
 }
 
 Editor.propTypes = {
-  onEditChange: PropTypes.func.isRequired,
+  onTitleEditChange: PropTypes.func.isRequired,
+  onDocumentEditChange: PropTypes.func.isRequired,
   logRecords: PropTypes.arrayOf(
     PropTypes.shape({
       timestampStr: PropTypes.string.isRequired,
@@ -98,7 +91,12 @@ Editor.propTypes = {
       message: PropTypes.string.isRequired,
     }),
   ).isRequired,
-  markdownStr: PropTypes.string.isRequired,
+  parseError: PropTypes.instanceOf(Map),
+  previewHTMLStr: PropTypes.string.isRequired,
+};
+
+Editor.defaultProps = {
+  parseError: undefined,
 };
 
 export default Editor;

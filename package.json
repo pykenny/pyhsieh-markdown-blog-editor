@@ -10,6 +10,7 @@
     "axios": "^0.21.0",
     "dompurify": "^2.2.0",
     "express": "^4.17.1",
+    "filenamify": "^4.2.0",
     "highlight.js": "^10.3.2",
     "http-proxy-middleware": "^1.0.6",
     "lodash": "^4.17.20",
@@ -20,6 +21,7 @@
     "react-dom": "^17.0.1",
     "strftime": "^0.10.0",
     "tar": "^6.0.5",
+    "unused-filename": "^2.1.0",
     "url-join": "^4.0.1",
     "yargs": "^16.1.0"
   },
