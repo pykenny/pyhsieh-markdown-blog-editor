@@ -1,20 +1,20 @@
-import path from 'path';
-import fs from 'fs';
-import crypto from 'crypto';
+const path = require('path');
+const fs = require('fs').promises;
+const crypto = require('crypto');
 
-import { map, chain } from 'lodash';
-import filenamify from 'filenamify';
-import unusedFilename from 'unused-filename';
-import strftime from 'strftime';
-import tar from 'tar';
+const { map, chain } = require('lodash');
+const filenamify = require('filenamify');
+const unusedFilename = require('unused-filename');
+const strftime = require('strftime');
+const tar = require('tar');
 
 const TMP_FOLDER_PREFIX = '_tmp_';
 const IMG_FOLDER_PATH = '/img';
 const DOC_FILENAME = 'document.md';
 const META_FILENAME = 'meta.json';
 
-const TIMESTAMP_OUTPUT_FORMAT = '%Y_%m_%d_%H_%M_%S_%Z';
-const TIMESTAMP_RESPONSE_FORMAT = '%Y-%m-%d %H:%M:%S %Z';
+const TIMESTAMP_OUTPUT_FORMAT = '%Y%m%d_%H%M%S%z';
+const TIMESTAMP_RESPONSE_FORMAT = '%Y-%m-%d %H:%M:%S %z';
 
 async function bundlePost(imgDir, outDir, rawDocument, docMeta) {
   // Below is our current file structure:
@@ -54,7 +54,7 @@ async function bundlePost(imgDir, outDir, rawDocument, docMeta) {
       docOutPath, rawDocument, { encoding: 'utf8' },
     );
     const metaWriteOperation = fs.writeFile(
-      metaOutPath, docMeta.toString(), { encoding: 'utf8' },
+      metaOutPath, JSON.stringify(docMeta, null, 2), { encoding: 'utf8' },
     );
     await Promise.all(chain(
       [docWriteOperation, metaWriteOperation],
@@ -67,33 +67,36 @@ async function bundlePost(imgDir, outDir, rawDocument, docMeta) {
       }),
     ));
   } catch (e) {
-    await fs.rm(tmpFolderPath, { force: true, recursive: true });
+    await fs.rmdir(tmpFolderPath, { force: true, recursive: true });
     throw e;
   }
 
   // Step 3: Zip and archive the content, then remove temp folder.
   const targetFileName = filenamify(
     `${title}_${strftime(TIMESTAMP_OUTPUT_FORMAT)}.tgz`,
-  );
+    { replacement: '_' },
+  )
+    .replace(/\s/g, '_');
 
-  const targetFilePath = unusedFilename(path.join(outDir, targetFileName));
+  const targetFilePath = await unusedFilename(path.join(outDir, targetFileName));
   try {
     await tar.c(
       {
         gzip: true,
         file: targetFilePath,
+        cwd: tmpFolderPath,
       },
-      [tmpFolderPath],
+      ['./'],
     );
-    await fs.rm(tmpFolderPath, { force: true, recursive: true });
+    await fs.rmdir(tmpFolderPath, { force: true, recursive: true });
     return {
       timeStamp: strftime(TIMESTAMP_RESPONSE_FORMAT),
       outputDir: targetFilePath,
     };
   } catch (e) {
-    await fs.rm(tmpFolderPath, { force: true, recursive: true });
+    await fs.rmdir(tmpFolderPath, { force: true, recursive: true });
     throw e;
   }
 }
 
-export default bundlePost;
+module.exports = bundlePost;

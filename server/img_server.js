@@ -6,8 +6,10 @@ const fs = require('fs');
 const yargs = require('yargs/yargs');
 const { hideBin } = require('yargs/helpers');
 const express = require('express');
+const bodyParser = require('body-parser');
 const { createProxyMiddleware } = require('http-proxy-middleware');
-// const apis = require('../src/js/apis');
+
+const postBundler = require('./post_bundler');
 
 // Argument Setings
 const { argv } = yargs(hideBin(process.argv))
@@ -42,6 +44,13 @@ const { argv } = yargs(hideBin(process.argv))
       nargs: 1,
       default: Path.normalize(Path.join(__dirname, 'img')),
     },
+    'out-dir': {
+      alias: 'o',
+      describe: 'Directory to save the bundled files. If you are using relative path, please note that the working directory is "server" folder under the root directory.',
+      type: 'string',
+      nargs: 1,
+      default: Path.normalize(Path.join(__dirname, 'output')),
+    },
   });
 
 const devPort = argv['dev-port'];
@@ -50,6 +59,9 @@ const servicePort = argv['backend-port'];
 const fullImageDir = Path.normalize(argv['img-dir'].startsWith('.')
   ? Path.join(__dirname, argv['img-dir'])
   : argv['img-dir']);
+const fullOutputDir = Path.normalize(argv['out-dir'].startsWith('.')
+  ? Path.join(__dirname, argv['out-dir'])
+  : argv['out-dir']);
 
 // Force create directory as needed
 if (
@@ -66,6 +78,18 @@ const parcelMiddleware = createProxyMiddleware({
 });
 server.use('/img', express.static(argv['img-dir']));
 server.use('/', parcelMiddleware);
+
+// Support JSON request content
+server.use(bodyParser.json());
+server.use(bodyParser.urlencoded({ extended: true }));
+
+server.post('/bundle_document', async (req, res) => {
+  const { rawDocument, documentMeta } = res.body;
+  const result = await postBundler(
+    fullImageDir, fullOutputDir, rawDocument, documentMeta,
+  );
+  res.json(result);
+});
 
 server.listen(servicePort, () => {
   console.log(`Listening to port ${servicePort}...`);
