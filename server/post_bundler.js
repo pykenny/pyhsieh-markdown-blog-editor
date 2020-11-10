@@ -49,27 +49,30 @@ async function bundlePost(imgDir, outDir, rawDocument, docMeta) {
   const docOutPath = path.join(tmpFolderPath, DOC_FILENAME);
   const metaOutPath = path.join(tmpFolderPath, META_FILENAME);
 
-  try {
-    const docWriteOperation = fs.writeFile(
-      docOutPath, rawDocument, { encoding: 'utf8' },
-    );
-    const metaWriteOperation = fs.writeFile(
-      metaOutPath, JSON.stringify(docMeta, null, 2), { encoding: 'utf8' },
-    );
-    await Promise.all(chain(
-      [docWriteOperation, metaWriteOperation],
-      map(aliasMapping, (imgPath, alias) => {
-        const fullSourceImgPath = path.join(imgDir, imgPath);
-        const outImgPath = path.join(
-          imageFolderPath, `${alias}${path.extname(imgPath)}`,
-        );
-        return fs.copyFile(fullSourceImgPath, outImgPath);
-      }),
-    ));
-  } catch (e) {
-    await fs.rmdir(tmpFolderPath, { force: true, recursive: true });
-    throw e;
-  }
+  const docWriteOperation = fs.writeFile(
+    docOutPath, rawDocument, { encoding: 'utf8' },
+  );
+  const metaWriteOperation = fs.writeFile(
+    metaOutPath, JSON.stringify(docMeta, null, 2), { encoding: 'utf8' },
+  );
+
+  const fileCreationResult = await Promise.allSettled(chain(
+    [docWriteOperation, metaWriteOperation],
+    map(aliasMapping, (imgPath, alias) => {
+      const fullSourceImgPath = path.join(imgDir, imgPath);
+      const outImgPath = path.join(
+        imageFolderPath, `${alias}${path.extname(imgPath)}`,
+      );
+      return fs.copyFile(fullSourceImgPath, outImgPath);
+    }),
+  ));
+
+  fileCreationResult.forEach(async (result) => {
+    if (result.status === 'rejected') {
+      await fs.rmdir(tmpFolderPath, { force: true, recursive: true });
+      throw result.reason;
+    }
+  });
 
   // Step 3: Zip and archive the content, then remove temp folder.
   const targetFileName = filenamify(

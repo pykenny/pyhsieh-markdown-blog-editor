@@ -1,5 +1,6 @@
 import React from 'react';
 import strftime from 'strftime';
+import { isEmpty } from 'lodash';
 
 import Banner from './Banner';
 import Editor from './Editor';
@@ -9,16 +10,23 @@ import APIS from '../apis';
 
 const PARSE_DELAY = 1000;
 
+function parseTagString(rawString) {
+  // (1) Split by comma then trim. (2) Remove empty tags.
+  return rawString.split(',').map((s) => s.trim()).filter((s) => s);
+}
+
 class MarkdownEditor extends React.Component {
   constructor(props) {
     super(props);
     this.parser = createDocumentParser();
     this.bundleDocument = this.bundleDocument.bind(this);
     this.onTitleEditChange = this.onTitleEditChange.bind(this);
+    this.onTagsEditChange = this.onTagsEditChange.bind(this);
     this.onDocumentEditChange = this.onDocumentEditChange.bind(this);
     this.onLogUpdate = this.onLogUpdate.bind(this);
     this.state = {
       documentTitle: '',
+      documentTags: [],
       previewHTMLStr: '',
       parseError: undefined,
       // Parsed information. You can only save data when it's available.
@@ -36,6 +44,10 @@ class MarkdownEditor extends React.Component {
 
   onTitleEditChange(documentTitle) {
     this.setState(() => ({ documentTitle }));
+  }
+
+  onTagsEditChange(rawEditString) {
+    this.setState(() => ({ documentTags: parseTagString(rawEditString) }));
   }
 
   onDocumentEditChange(documentText) {
@@ -78,11 +90,11 @@ class MarkdownEditor extends React.Component {
   }
 
   bundleDocument() {
-    const { documentTitle, packedData } = this.state;
+    const { documentTitle, documentTags, packedData } = this.state;
 
     if (packedData !== undefined) {
       const { rawDocument, aliasMapping } = packedData;
-      const documentMeta = { documentTitle, aliasMapping };
+      const documentMeta = { documentTitle, documentTags, aliasMapping };
 
       return APIS.bundlePost(rawDocument, documentMeta)
         .then((response) => {
@@ -116,6 +128,7 @@ class MarkdownEditor extends React.Component {
   render() {
     const {
       documentTitle,
+      documentTags,
       documentText,
       logHistory,
       pendingUpdateTimerId,
@@ -131,11 +144,13 @@ class MarkdownEditor extends React.Component {
             && (parseError === undefined)
             && (packedData !== undefined)
             && (documentTitle !== '')
+            && (!isEmpty(documentTags))
           }
           optionBundleOnClick={this.bundleDocument}
         />
         <Editor
           onTitleEditChange={this.onTitleEditChange}
+          onTagsEditChange={this.onTagsEditChange}
           onDocumentEditChange={this.onDocumentEditChange}
           logRecords={logHistory}
           markdownStr={documentText}

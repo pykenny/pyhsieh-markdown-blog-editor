@@ -52,6 +52,7 @@ function createErrorMessage(errors) {
 function Editor(props) {
   const {
     onTitleEditChange,
+    onTagsEditChange,
     onDocumentEditChange,
     logRecords,
     parseError,
@@ -68,7 +69,7 @@ function Editor(props) {
       <div className="grid-row">
         <div className="editor-interface-block  grid-column-half editor-input-container">
           <div className="area-title">Editor</div>
-          <EditArea {...{ onTitleEditChange, onDocumentEditChange }} />
+          <EditArea {...{ onTitleEditChange, onTagsEditChange, onDocumentEditChange }} />
           <div className="area-title">Log</div>
           <LogArea {...{ logRecords }} />
         </div>
@@ -84,6 +85,7 @@ function Editor(props) {
 Editor.propTypes = {
   onTitleEditChange: PropTypes.func.isRequired,
   onDocumentEditChange: PropTypes.func.isRequired,
+  onTagsEditChange: PropTypes.func.isRequired,
   logRecords: PropTypes.arrayOf(
     PropTypes.shape({
       timestampStr: PropTypes.string.isRequired,
