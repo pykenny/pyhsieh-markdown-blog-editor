@@ -90,13 +90,23 @@ class MarkdownEditor extends React.Component {
   }
 
   bundleDocument() {
-    const { documentTitle, documentTags, packedData } = this.state;
+    const {
+      documentTitle,
+      documentTags,
+      packedData,
+      previewHTMLStr,
+    } = this.state;
 
     if (packedData !== undefined) {
       const { rawDocument, aliasMapping } = packedData;
-      const documentMeta = { documentTitle, documentTags, aliasMapping };
+      const documentMeta = {
+        documentTitle,
+        documentTags,
+        aliasMapping,
+        version: Constants.Version,
+      };
 
-      return APIS.bundlePost(rawDocument, documentMeta)
+      return APIS.bundlePost(rawDocument, previewHTMLStr, documentMeta)
         .then((response) => {
           const { timeStamp, outputDir } = response.data;
           const completeMessage = (

@@ -2,7 +2,7 @@ const path = require('path');
 const fs = require('fs').promises;
 const crypto = require('crypto');
 
-const { map, chain } = require('lodash');
+const { map, chain, forEach } = require('lodash');
 const filenamify = require('filenamify');
 const unusedFilename = require('unused-filename');
 const strftime = require('strftime');
@@ -11,19 +11,27 @@ const tar = require('tar');
 const TMP_FOLDER_PREFIX = '_tmp_';
 const IMG_FOLDER_PATH = '/img';
 const DOC_FILENAME = 'document.md';
+const PARSED_DOC_FILENAME = 'document.xml';
 const META_FILENAME = 'meta.json';
 
 const TIMESTAMP_OUTPUT_FORMAT = '%Y%m%d_%H%M%S%z';
 const TIMESTAMP_RESPONSE_FORMAT = '%Y-%m-%d %H:%M:%S %z';
 
-async function bundlePost(imgDir, outDir, rawDocument, docMeta) {
+async function bundlePost(
+  imgDir,
+  outDir,
+  rawDocument,
+  parsedDocument,
+  docMeta,
+) {
   // Below is our current file structure:
   // _tmp_SOMEHASH
   // |_ document.md
+  // |_ document.xml
   // |_ meta.json
   // |_ img
-  //   |_ image-1.jpg
-  //   |_ image-2.jpg
+  //   |_ image-alias-1.jpg
+  //   |_ image-alias-2.jpg
   //   |_ ...
 
   // Step 1: Create temporary folder as needed
@@ -47,18 +55,29 @@ async function bundlePost(imgDir, outDir, rawDocument, docMeta) {
   // Step 2: Copy images and save document/meta to the temp directory
   const { aliasMapping, documentTitle } = docMeta;
   const docOutPath = path.join(tmpFolderPath, DOC_FILENAME);
+  const parsedDocOutPath = path.join(tmpFolderPath, PARSED_DOC_FILENAME);
   const metaOutPath = path.join(tmpFolderPath, META_FILENAME);
+
+  // Clone the original mapping to another object, then modify docMeta
+  // through aliasMapping.
+  const aliasPathMapping = { ...aliasMapping };
+  forEach(aliasMapping, (imgPath, alias) => {
+    aliasMapping[alias] = `${alias}${path.extname(imgPath)}`;
+  });
 
   const docWriteOperation = fs.writeFile(
     docOutPath, rawDocument, { encoding: 'utf8' },
+  );
+  const parsedDocWriteOperation = fs.writeFile(
+    parsedDocOutPath, parsedDocument, { encoding: 'utf8' },
   );
   const metaWriteOperation = fs.writeFile(
     metaOutPath, JSON.stringify(docMeta, null, 2), { encoding: 'utf8' },
   );
 
   const fileCreationResult = await Promise.allSettled(chain(
-    [docWriteOperation, metaWriteOperation],
-    map(aliasMapping, (imgPath, alias) => {
+    [docWriteOperation, parsedDocWriteOperation, metaWriteOperation],
+    map(aliasPathMapping, (imgPath, alias) => {
       const fullSourceImgPath = path.join(imgDir, imgPath);
       const outImgPath = path.join(
         imageFolderPath, `${alias}${path.extname(imgPath)}`,
@@ -85,7 +104,7 @@ async function bundlePost(imgDir, outDir, rawDocument, docMeta) {
   try {
     await tar.c(
       {
-        gzip: true,
+        gzip: false,
         file: targetFilePath,
         cwd: tmpFolderPath,
       },

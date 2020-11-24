@@ -186,7 +186,7 @@ function imageWithAlias(state, silent) {
         pos = res.pos;
       } else {
         /* Taking a strict stance here: Either not initiating alias declaration
-         * within inline link, or providing one valid alais.
+         * within inline link, or providing one valid alias.
          * By doing so, syntax issues will be handled before alias resolution.
          */
         state.pos = oldPos;
@@ -351,6 +351,7 @@ function validateImageInformation(tokens) {
   const errLink = {};
   const errAlias = {};
   let traversalStack = [...tokens];
+  const imageTokens = [];
   let item;
   let src;
   let alias;
@@ -372,6 +373,7 @@ function validateImageInformation(tokens) {
       stringOneToOneCheck(
         src, alias, linkAliasMapping, aliasLinkMapping, errLink, errAlias,
       );
+      imageTokens.push(item);
     }
   }
 
@@ -388,6 +390,14 @@ function validateImageInformation(tokens) {
     return result;
   }
 
+  // Complete image tokens without alias
+  forEach(imageTokens, (imgTokenItem) => {
+    const imgTokenSrc = imgTokenItem.attrs[IMG_SRC_IDX][ATTR_VALUE_IDX];
+    const imgTokenAlias = imgTokenItem.attrs[IMG_ALIAS_IDX][ATTR_VALUE_IDX];
+    if (imgTokenAlias === undefined) {
+      imgTokenItem.attrs[IMG_ALIAS_IDX][ATTR_VALUE_IDX] = linkAliasMapping[imgTokenSrc];
+    }
+  });
   result = { ...result, aliasLinkMapping };
   return result;
 }

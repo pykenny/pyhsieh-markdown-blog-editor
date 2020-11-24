@@ -80,9 +80,9 @@ const parcelMiddleware = createProxyMiddleware({
 server.use('/img', express.static(argv['img-dir']));
 
 server.post('/bundle_document', async (req, res) => {
-  const { rawDocument, documentMeta } = req.body;
+  const { rawDocument, parsedDocument, documentMeta } = req.body;
   const result = await postBundler(
-    fullImageDir, fullOutputDir, rawDocument, documentMeta,
+    fullImageDir, fullOutputDir, rawDocument, parsedDocument, documentMeta,
   );
   res.json(result);
 });
