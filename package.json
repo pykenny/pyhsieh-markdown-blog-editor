@@ -19,12 +19,11 @@
     "purecss": "^2.0.3",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "regenerator-runtime": "^0.13.7",
     "strftime": "^0.10.0",
-    "tar": "^6.0.5",
     "unused-filename": "^2.1.0",
     "url-join": "^4.0.1",
-    "yargs": "^16.1.0",
-    "regenerator-runtime": "^0.13.7"
+    "yargs": "^16.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.3",

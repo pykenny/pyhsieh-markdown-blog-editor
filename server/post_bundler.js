@@ -1,12 +1,14 @@
 const path = require('path');
 const fs = require('fs').promises;
+const { promisify } = require('util');
 const crypto = require('crypto');
 
 const { map, chain, forEach } = require('lodash');
 const filenamify = require('filenamify');
 const unusedFilename = require('unused-filename');
 const strftime = require('strftime');
-const tar = require('tar');
+
+const exec = promisify(require('child_process').exec);
 
 const TMP_FOLDER_PREFIX = '_tmp_';
 const IMG_FOLDER_PATH = '/img';
@@ -102,13 +104,8 @@ async function bundlePost(
 
   const targetFilePath = await unusedFilename(path.join(outDir, targetFileName));
   try {
-    await tar.c(
-      {
-        gzip: false,
-        file: targetFilePath,
-        cwd: tmpFolderPath,
-      },
-      ['./'],
+    await exec(
+      `tar -czf ${targetFilePath} -C ${tmpFolderPath} .`,
     );
     await fs.rmdir(tmpFolderPath, { force: true, recursive: true });
     return {
