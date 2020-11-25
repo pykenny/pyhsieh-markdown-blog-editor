@@ -77,6 +77,9 @@ async function bundlePost(
     metaOutPath, JSON.stringify(docMeta, null, 2), { encoding: 'utf8' },
   );
 
+  // We need to apply allSettled() instead of all() in order to make sure
+  // cleanup will start right after all the write/copy attempts complete,
+  // no matter resolved or failed.
   const fileCreationResult = await Promise.allSettled(chain(
     [docWriteOperation, parsedDocWriteOperation, metaWriteOperation],
     map(aliasPathMapping, (imgPath, alias) => {
@@ -104,8 +107,15 @@ async function bundlePost(
 
   const targetFilePath = await unusedFilename(path.join(outDir, targetFileName));
   try {
+    // Simple explanation:
+    //  - Create a zipped (gzip as default) archive
+    //  - Move to 'tmpFolderPath' before creating archive.
+    //  - Archive all the files and folders under 'tmpFolderPath'.
+    //  - Pop off parent directory by 1 layer, here this means to get rid of
+    //    '.' directory, so that we can access 'document.md' without adding
+    //    './' prefix.
     await exec(
-      `tar -czf ${targetFilePath} -C ${tmpFolderPath} .`,
+      `tar czf ${targetFilePath} -C ${tmpFolderPath} --strip-components 1 .`,
     );
     await fs.rmdir(tmpFolderPath, { force: true, recursive: true });
     return {
