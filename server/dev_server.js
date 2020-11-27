@@ -3,22 +3,27 @@
 /* ^^ We're using this for development now, so simply skip the warnings here */
 const Path = require('path');
 const fs = require('fs');
+const process = require('process');
+const { exec } = require('child_process');
+
 const yargs = require('yargs/yargs');
 const { hideBin } = require('yargs/helpers');
-const Parcel = require('@parcel/core').default;
 const express = require('express');
 const { createProxyMiddleware } = require('http-proxy-middleware');
-// const apis = require('../src/js/apis');
+
+const postBundler = require('./post_bundler');
 
 // Argument Setings
 const { argv } = yargs(hideBin(process.argv))
   .usage('Usage: $0 [options]')
   .example(
-    '$0 --dev-port 4000 --backend-port 4001 --img-dir ./imgs',
-    'Start the frontend-dev server at port 4000, service server at port 4001, and using "img" folder under root directory.',
+    '$0 --dev-port 4000 --backend-port 4001 --img-dir ./imgs --out-dir ./result',
+    'Route frontend-dev server requests to port 4000, service server at port '
+    + '4001, save output archives to "result" folder under root directory, '
+    + 'and using "img" folder to serach for images under root directory.',
   )
   .example(
-    '$0 -f 4000 -p 4001 -d ./imgs',
+    '$0 -f 4000 -p 4001 -d ./imgs -o ./result',
     'Do the same thing as above',
   )
   .options({
@@ -38,10 +43,33 @@ const { argv } = yargs(hideBin(process.argv))
     },
     'img-dir': {
       alias: 'd',
-      describe: 'Directory for accessing image content. If you are using relative path, please note that the working directory is "server" folder under the root directory.',
+      describe: (
+        'Directory for accessing image content. '
+        + 'If you are using relative path, please note that the working '
+        + 'directory is "server" folder under the root directory.'
+      ),
       type: 'string',
       nargs: 1,
       default: Path.normalize(Path.join(__dirname, 'img')),
+    },
+    'out-dir': {
+      alias: 'o',
+      describe: (
+        'Directory to save the bundled files. '
+        + 'If you are using relative path, please note that the working '
+        + 'directory is "server" folder under the root directory.'
+      ),
+      type: 'string',
+      nargs: 1,
+      default: Path.normalize(Path.join(__dirname, 'output')),
+    },
+    'parcel-options': {
+      describe: (
+        'Additional options used to initialize parcel development server.'
+      ),
+      type: 'string',
+      nargs: 1,
+      default: '',
     },
   });
 
@@ -51,30 +79,11 @@ const servicePort = argv['backend-port'];
 const fullImageDir = Path.normalize(argv['img-dir'].startsWith('.')
   ? Path.join(__dirname, argv['img-dir'])
   : argv['img-dir']);
+const fullOutputDir = Path.normalize(argv['out-dir'].startsWith('.')
+  ? Path.join(__dirname, argv['out-dir'])
+  : argv['out-dir']);
 
-// Development Server Settings
-const frontEndDevServerOptions = {
-  defaultConfig: require.resolve('@parcel/config-default'),
-  entries: Path.join(__dirname, '../src/views/*.html'),
-  outDir: Path.join(__dirname, '../dist'),
-  publicUrl: '/',
-  mode: 'development',
-  cache: false,
-  logLevel: 4,
-  serve: {
-    publicUrl: '/',
-    port: devPort,
-  },
-  hot: {
-    port: devPort,
-    host: '/',
-  },
-};
-const frontendDevServer = new Parcel(frontEndDevServerOptions);
-
-// Stack up dev server
-frontendDevServer.run();
-
+// Force create directory as needed
 if (
   !fs.existsSync(fullImageDir)
   || !fs.lstatSync(fullImageDir).isDirectory()
@@ -82,18 +91,51 @@ if (
   fs.mkdirSync(fullImageDir);
 }
 
+// Start parcel dev server as child process and pipe output to parent
+process.env.FORCE_COLOR = 2; // Enable color
+const parcelTargetPath = Path.join(__dirname, '../src/views/editor.html');
+const parcelServer = exec(
+  `npx parcel "${parcelTargetPath}" --no-cache --port ${devPort} ${argv['parcel-options']}`,
+  {},
+  (error) => {
+    if (error) {
+      process.stdout.write('Parcel dev server terminated with error:\n');
+      process.stdout.write(error);
+    }
+    process.stdout.write('Parcel dev server terminated successfully.\n');
+  },
+);
+parcelServer.stdout.pipe(process.stdout);
+parcelServer.stderr.pipe(process.stderr);
+
+// Start server and redirect requests
 const server = express();
+server.use(express.json());
 
-server.use('/img', express.static(argv['img-dir']));
-
-// Create middleware to redirect requests
 const parcelMiddleware = createProxyMiddleware({
   target: `http://localhost:${devPort}/`,
 });
+server.use('/img', express.static(argv['img-dir']));
 
+server.post('/bundle_document', async (req, res) => {
+  const { rawDocument, parsedDocument, documentMeta } = req.body;
+  const result = await postBundler(
+    fullImageDir, fullOutputDir, rawDocument, parsedDocument, documentMeta,
+  );
+  res.json(result);
+});
+
+// Redirect others to Parcel service
 server.use('/', parcelMiddleware);
 
-// Run your Express server
-server.listen(servicePort, () => {
-  console.log(`Listening to port ${servicePort}...`);
+const serverHandle = server.listen(servicePort, () => {
+  process.stdout.write(`Listening to port ${servicePort}...`);
+});
+
+// Terminate Parcel server first when receiving Ctrl-C
+process.on('SIGINT', () => {
+  serverHandle.close(() => {
+    process.stdout.write('\nTerminating Parcel dev server...\n');
+    parcelServer.kill('SIGINT');
+  });
 });

@@ -8,7 +8,7 @@ const filenamify = require('filenamify');
 const unusedFilename = require('unused-filename');
 const strftime = require('strftime');
 
-const exec = promisify(require('child_process').exec);
+const execFile = promisify(require('child_process').execFile);
 
 const TMP_FOLDER_PREFIX = '_tmp_';
 const IMG_FOLDER_PATH = '/img';
@@ -114,16 +114,20 @@ async function bundlePost(
     //  - Pop off parent directory by 1 layer, here this means to get rid of
     //    '.' directory, so that we can access 'document.md' without adding
     //    './' prefix.
-    await exec(
-      `tar czf ${targetFilePath} -C ${tmpFolderPath} --strip-components 1 .`,
+    await execFile(
+      'tar',
+      ['czf', targetFilePath, '-C', tmpFolderPath, '--strip-components', '1', '.'],
     );
-    await fs.rmdir(tmpFolderPath, { force: true, recursive: true });
+    await fs.rmdir(tmpFolderPath, { recursive: true });
     return {
       timeStamp: strftime(TIMESTAMP_RESPONSE_FORMAT),
       outputDir: targetFilePath,
     };
   } catch (e) {
-    await fs.rmdir(tmpFolderPath, { force: true, recursive: true });
+    await Promise.allSettled([
+      fs.rmdir(tmpFolderPath, { recursive: true }),
+      fs.unlink(targetFilePath),
+    ]);
     throw e;
   }
 }

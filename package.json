@@ -37,13 +37,15 @@
     "eslint-plugin-jsx-a11y": "^6.3.0",
     "eslint-plugin-react": "^7.20.0",
     "eslint-plugin-react-hooks": "^4.2.0",
-    "parcel": "^2.0.0-nightly.438",
+    "parcel": "^2.0.0-nightly.462",
     "postcss": "^8.1.4",
     "postcss-flexbugs-fixes": "^4.2.1",
     "postcss-modules": "^3.2.2",
     "sass": "^1.28.0"
   },
   "scripts": {
+    "boot-dev": "yarn install",
+    "boot-prod": "yarn install && yarn build && yarn install --production",
     "dev": "node ./server/dev_server.js",
     "cleanup": "rm -rf .parcel-cache dist",
     "build": "yarn cleanup && npx parcel build \"src/views/editor.html\""
