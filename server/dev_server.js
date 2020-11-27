@@ -129,13 +129,13 @@ server.post('/bundle_document', async (req, res) => {
 server.use('/', parcelMiddleware);
 
 const serverHandle = server.listen(servicePort, () => {
-  process.stdout.write(`Listening to port ${servicePort}...`);
+  process.stdout.write(`Listening to port ${servicePort}...\n`);
 });
 
 // Terminate Parcel server first when receiving Ctrl-C
 process.on('SIGINT', () => {
   serverHandle.close(() => {
-    process.stdout.write('\nTerminating Parcel dev server...\n');
+    process.stdout.write('Terminating Parcel dev server...\n');
     parcelServer.kill('SIGINT');
   });
 });
