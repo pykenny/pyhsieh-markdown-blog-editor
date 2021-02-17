@@ -1,3 +1,4 @@
+@use "../../node_modules/purecss/build/base-min.css";
 @use "markdown";
 @use "fonts";
 
@@ -167,6 +168,7 @@ body {
     flex-grow: 2;
     height: 0;
     width: 100%;
+    white-space: nowrap;
     overflow-y: scroll;
     resize: none;
     padding: 8px;
@@ -221,6 +223,8 @@ body {
 }
 
 .preview-content {
+  display: flex;
+  flex-direction: row;
   margin: 4px;
   border-width: 1px;
   border-style: dotted;

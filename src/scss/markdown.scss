@@ -1,3 +1,5 @@
+@use "../../node_modules/highlight.js/scss/agate.scss";
+
 /* Layout for GitHub-Flavoured Markdown */
 $green-darker-olive: #2B3618;
 $green-dark-olive: #556B2F;
@@ -171,5 +173,13 @@ $grey-lighter: #EDEDED;
     border-radius: 2px;
     border-color: $grey-light;
     background-color: $grey-lighter;
+  }
+
+  // To deal with long inline content we need help from flex box model to
+  // confine width
+  .hljs {
+    width: 0;
+    flex-grow: 1;
+    overflow-x: scroll;
   }
 }
