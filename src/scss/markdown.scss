@@ -7,6 +7,8 @@ $yellow-light: #FFFFE0;
 $yellow-papayawhip: #FFEFD5;
 $grey-light: #D3D3D3;
 $grey-lighter: #EDEDED;
+$font-code: Consolas, "Courier New", Courier, monospace;
+$font-redhat: "Red Hat Display";
 
 @mixin markdown {
   // Reset margins
@@ -20,7 +22,7 @@ $grey-lighter: #EDEDED;
   h4,
   h5,
   h6 {
-    font-family: "Red Hat Display";
+    font-family: $font-redhat;
   }
 
   h1,
@@ -165,6 +167,7 @@ $grey-lighter: #EDEDED;
 
   // Inline code. Preindented one will be managed by highightJS
   code {
+    font-family: $font-code;
     font-size: 0.85em;
     line-height: 0.85em;
     padding: 0 0.25em;
@@ -175,11 +178,82 @@ $grey-lighter: #EDEDED;
     background-color: $grey-lighter;
   }
 
-  // To deal with long inline content we need help from flex box model to
-  // confine width
-  .hljs {
-    width: 0;
-    flex-grow: 1;
-    overflow-x: scroll;
+  pre {
+    font-family: $font-code;
+    display: block;
+    position: relative;
+    overflow-x: auto;
+    padding: 0.5em 0 0.5em 1em;
+    background-color: #333;
+
+    // Overwrite inline code & hljs theme settings
+    code, code.hljs {
+      display: inline-block;    // Need inline layout to get correct width
+      position: relative;       // Allow hacks like line highlight/labeling
+      overflow: hidden; // Has some problem on pixel calculation, so prevent scrolling here
+      background: none;         // Let <pre> cover background.
+      color: white;
+      border: none;
+      padding: 0 2em 0 0;
+      font-size: 1em;
+      line-height: 1.25em;
+      z-index: 2;
+    }
+  }
+
+  .hljs-ln-label-container {
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    min-width: 100%;
+    z-index: 0;
+  }
+
+  .labled-ln {
+    display: block;
+    position: absolute;
+    left: 0;
+    padding-left: 1em;
+    width: 100%;
+    line-height: 1.25em;
+    box-sizing: border-box;
+
+    .labled-ln-color-fill {
+      display: block;
+      line-height: inherit;
+      background-color: #525852;
+      box-sizing: border-box;
+    }
+  }
+
+  .hljs-ln {
+    .ln-bg {
+      position: absolute;
+      z-index: 1;
+      top: 0;
+      left: 0;
+      height: 100%;
+      border-right: 1px solid yellow;
+      background: none;
+    }
+
+    .ln-num {
+      position: relative;
+      line-height: 1.25em;
+      user-select: none;
+    }
+
+    .ln-num::before {
+      position: absolute;
+      z-index: 3;
+      top: 0;
+      right: 0;
+      margin-right: 1.25em;
+      color: yellow;
+      font-style: normal;
+      font-weight: normal;
+      content: attr(data-num);
+    }
   }
 }

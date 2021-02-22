@@ -78,6 +78,7 @@ body {
 
   & > * {
     box-sizing: border-box;
+    min-width: 0;
   }
 }
 
@@ -223,8 +224,6 @@ body {
 }
 
 .preview-content {
-  display: flex;
-  flex-direction: row;
   margin: 4px;
   border-width: 1px;
   border-style: dotted;
