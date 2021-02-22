@@ -9,6 +9,7 @@ $grey-light: #D3D3D3;
 $grey-lighter: #EDEDED;
 $font-code: Consolas, "Courier New", Courier, monospace;
 $font-redhat: "Red Hat Display";
+$font-crimson: "Crimson Pro";
 
 @mixin markdown {
   // Reset margins
@@ -22,7 +23,7 @@ $font-redhat: "Red Hat Display";
   h4,
   h5,
   h6 {
-    font-family: $font-redhat;
+    font-family: 'Red Hat Display';
   }
 
   h1,
@@ -62,8 +63,11 @@ $font-redhat: "Red Hat Display";
     color: #696969;
   }
 
-  p, blockquote, ol, ul {
-    font-family: "Crimson Pro";
+  p,
+  blockquote,
+  ol,
+  ul {
+    font-family: 'Crimson Pro';
     margin: 0.3em 0 0 0;
     line-height: 1.25em;
   }
@@ -93,7 +97,11 @@ $font-redhat: "Red Hat Display";
   hr {
     border: 0;
     height: 1px;
-    background-image: linear-gradient(to right, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+    background-image: linear-gradient(
+      to right,
+      rgba(0, 0, 0, 0.75),
+      rgba(0, 0, 0, 0)
+    );
   }
 
   a,
@@ -112,7 +120,8 @@ $font-redhat: "Red Hat Display";
   }
 
   // Prevent nested font growth.
-  ol, ul {
+  ol,
+  ul {
     list-style-position: inside;
     margin-left: 18px;
     font-size: 18px;
@@ -152,15 +161,19 @@ $font-redhat: "Red Hat Display";
     align-items: center;
     background-color: #FFFFFF;
     padding: 8px;
+    max-width: 75%;
+    margin-left: auto;
+    margin-right: auto;
 
     // Cap the image if it's too large.
     img {
-      max-width: 75%;
+      display: block;
+      width: 100%;
     }
 
     img + .caption {
       margin-top: 4px;
-      font-family: "Crimson Pro";
+      font-family: $font-crimson;
       line-height: 1.25em;
     }
   }
@@ -218,12 +231,14 @@ $font-redhat: "Red Hat Display";
     width: 100%;
     line-height: 1.25em;
     box-sizing: border-box;
+    user-select: none;
 
     .labled-ln-color-fill {
       display: block;
       line-height: inherit;
       background-color: #525852;
       box-sizing: border-box;
+      user-select: none;
     }
   }
 
