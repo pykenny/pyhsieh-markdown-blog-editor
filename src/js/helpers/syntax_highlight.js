@@ -396,7 +396,7 @@ class HljsDataProcessor {
     );
     pipeline = HljsDataProcessor.processPreBlock(
       pipeline, ((limitHeight > 0) ? limitHeight : undefined),
-      this.LineCount, this.language, this.fileName,
+      this.lineCount, this.language, this.fileName,
     );
     return pipeline.reduce((prev, curr) => `${prev}${curr}`, '');
   }
