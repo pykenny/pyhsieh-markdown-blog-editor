@@ -1,3 +1,4 @@
+@use "../../node_modules/purecss/build/base-min.css";
 @use "markdown";
 @use "fonts";
 
@@ -77,6 +78,7 @@ body {
 
   & > * {
     box-sizing: border-box;
+    min-width: 0;
   }
 }
 
@@ -167,6 +169,7 @@ body {
     flex-grow: 2;
     height: 0;
     width: 100%;
+    white-space: nowrap;
     overflow-y: scroll;
     resize: none;
     padding: 8px;

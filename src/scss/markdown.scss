@@ -1,3 +1,5 @@
+@use "../../node_modules/highlight.js/scss/agate.scss";
+
 /* Layout for GitHub-Flavoured Markdown */
 $green-darker-olive: #2B3618;
 $green-dark-olive: #556B2F;
@@ -5,6 +7,9 @@ $yellow-light: #FFFFE0;
 $yellow-papayawhip: #FFEFD5;
 $grey-light: #D3D3D3;
 $grey-lighter: #EDEDED;
+$font-code: Consolas, "Courier New", Courier, monospace;
+$font-redhat: "Red Hat Display";
+$font-crimson: "Crimson Pro";
 
 @mixin markdown {
   // Reset margins
@@ -18,7 +23,7 @@ $grey-lighter: #EDEDED;
   h4,
   h5,
   h6 {
-    font-family: "Red Hat Display";
+    font-family: 'Red Hat Display';
   }
 
   h1,
@@ -58,8 +63,11 @@ $grey-lighter: #EDEDED;
     color: #696969;
   }
 
-  p, blockquote, ol, ul {
-    font-family: "Crimson Pro";
+  p,
+  blockquote,
+  ol,
+  ul {
+    font-family: 'Crimson Pro';
     margin: 0.3em 0 0 0;
     line-height: 1.25em;
   }
@@ -89,7 +97,11 @@ $grey-lighter: #EDEDED;
   hr {
     border: 0;
     height: 1px;
-    background-image: linear-gradient(to right, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+    background-image: linear-gradient(
+      to right,
+      rgba(0, 0, 0, 0.75),
+      rgba(0, 0, 0, 0)
+    );
   }
 
   a,
@@ -108,7 +120,8 @@ $grey-lighter: #EDEDED;
   }
 
   // Prevent nested font growth.
-  ol, ul {
+  ol,
+  ul {
     list-style-position: inside;
     margin-left: 18px;
     font-size: 18px;
@@ -148,21 +161,26 @@ $grey-lighter: #EDEDED;
     align-items: center;
     background-color: #FFFFFF;
     padding: 8px;
+    max-width: 75%;
+    margin-left: auto;
+    margin-right: auto;
 
     // Cap the image if it's too large.
     img {
-      max-width: 75%;
+      display: block;
+      width: 100%;
     }
 
     img + .caption {
       margin-top: 4px;
-      font-family: "Crimson Pro";
+      font-family: $font-crimson;
       line-height: 1.25em;
     }
   }
 
   // Inline code. Preindented one will be managed by highightJS
   code {
+    font-family: $font-code;
     font-size: 0.85em;
     line-height: 0.85em;
     padding: 0 0.25em;
@@ -171,5 +189,86 @@ $grey-lighter: #EDEDED;
     border-radius: 2px;
     border-color: $grey-light;
     background-color: $grey-lighter;
+  }
+
+  pre {
+    font-family: $font-code;
+    display: block;
+    position: relative;
+    overflow-x: auto;
+    padding: 0.5em 0 0.5em 1em;
+    background-color: #333;
+
+    // Overwrite inline code & hljs theme settings
+    code, code.hljs {
+      display: inline-block;    // Need inline layout to get correct width
+      position: relative;       // Allow hacks like line highlight/labeling
+      overflow: hidden; // Has some problem on pixel calculation, so prevent scrolling here
+      background: none;         // Let <pre> cover background.
+      color: white;
+      border: none;
+      padding: 0 2em 0 0;
+      font-size: 1em;
+      line-height: 1.25em;
+      z-index: 2;
+    }
+  }
+
+  .hljs-ln-label-container {
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    min-width: 100%;
+    z-index: 0;
+  }
+
+  .labled-ln {
+    display: block;
+    position: absolute;
+    left: 0;
+    padding-left: 1em;
+    width: 100%;
+    line-height: 1.25em;
+    box-sizing: border-box;
+    user-select: none;
+
+    .labled-ln-color-fill {
+      display: block;
+      line-height: inherit;
+      background-color: #031D03;
+      box-sizing: border-box;
+      user-select: none;
+    }
+  }
+
+  .hljs-ln {
+    .ln-bg {
+      position: absolute;
+      z-index: 1;
+      top: 0;
+      left: 0;
+      height: 100%;
+      border-right: 1px solid yellow;
+      background: none;
+    }
+
+    .ln-num {
+      position: relative;
+      line-height: 1.25em;
+      user-select: none;
+    }
+
+    .ln-num::before {
+      position: absolute;
+      z-index: 3;
+      top: 0;
+      right: 0;
+      margin-right: 1.25em;
+      color: yellow;
+      font-style: normal;
+      font-weight: normal;
+      content: attr(data-num);
+    }
   }
 }
