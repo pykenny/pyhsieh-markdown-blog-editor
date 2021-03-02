@@ -402,7 +402,6 @@ class HljsDataProcessor {
   }
 }
 
-// {lineNum: true}
 function highlight(rawStr, lang, attrsRaw) {
   let langTag = (lang && hljs.getLanguage(lang)) ? lang : 'plaintext';
   let attrs;

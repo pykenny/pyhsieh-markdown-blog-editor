@@ -294,6 +294,35 @@ function imageRenderWithLocalRoute(tokens, idx, options, env, slf) {
   return `<div class="image-container">${imageElement}${titleElement}</div>`;
 }
 
+function isInternalLink(link) {
+  return (!link.startsWith('//')) && (link.startsWith('/') || link.startsWith('.'));
+}
+
+function createSafeTabLinkRenderer(defaultRenderer) {
+  // Reference:
+  // https://github.com/markdown-it/markdown-it/blob/master/docs/architecture.md#renderer
+  return (tokens, idx, options, env, slf) => {
+    let attrIdx = tokens[idx].attrIndex('href');
+
+    if ((attrIdx >= 0) && !isInternalLink(tokens[idx][attrIdx][1])) {
+      attrIdx = tokens[idx].attrIndex('target');
+      if (attrIdx < 0) {
+        tokens[idx].attrPush(['target', '_blank']);
+      } else {
+        tokens[idx].attrs[attrIdx][1] = '_blank';
+      }
+      attrIdx = tokens[idx].attrIndex('rel');
+      if (attrIdx < 0) {
+        tokens[idx].attrPush(['rel', 'noopener noreferrer']);
+      } else {
+        tokens[idx].attrs[attrIdx][1] = 'noopener noreferrer';
+      }
+    }
+
+    return defaultRenderer(tokens, idx, options, env, slf);
+  };
+}
+
 function stringOneToOneCheck(a, b, mapA2B, mapB2A, errA, errB) {
   // Using two mappings to find out violation of one-to-one relationship.
   // Errors A having multiple relationships with B will be recorded as a
@@ -408,9 +437,12 @@ function createDocumentParser() {
     breaks: true,
     highlight,
   });
-  // Overwrite default parser/render on image component
+  const defaultLinkRenderer = parser.renderer.rules.link_open
+    || ((tokens, idx, options, _, self) => self.renderToken(tokens, idx, options));
+  // Overwrite default parser/render
   parser.inline.ruler.at('image', imageWithAlias);
   parser.renderer.rules.image = imageRenderWithLocalRoute;
+  parser.renderer.rules.link_open = createSafeTabLinkRenderer(defaultLinkRenderer);
   return parser;
 }
 
