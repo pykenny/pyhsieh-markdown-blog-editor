@@ -303,8 +303,7 @@ function createSafeTabLinkRenderer(defaultRenderer) {
   // https://github.com/markdown-it/markdown-it/blob/master/docs/architecture.md#renderer
   return (tokens, idx, options, env, slf) => {
     let attrIdx = tokens[idx].attrIndex('href');
-
-    if ((attrIdx >= 0) && !isInternalLink(tokens[idx][attrIdx][1])) {
+    if ((attrIdx >= 0) && !isInternalLink(tokens[idx].attrs[attrIdx][1])) {
       attrIdx = tokens[idx].attrIndex('target');
       if (attrIdx < 0) {
         tokens[idx].attrPush(['target', '_blank']);

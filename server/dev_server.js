@@ -5,6 +5,7 @@ const Path = require('path');
 const fs = require('fs');
 const process = require('process');
 const { exec } = require('child_process');
+const https = require('https');
 
 const yargs = require('yargs/yargs');
 const { hideBin } = require('yargs/helpers');
@@ -71,10 +72,29 @@ const { argv } = yargs(hideBin(process.argv))
       nargs: 1,
       default: '',
     },
+    'ssl-key': {
+      describe: (
+        'Path to SSL key file.'
+      ),
+      type: 'string',
+      nargs: 1,
+      default: '',
+    },
+    'ssl-cert': {
+      describe: (
+        'Path to SSL cert file.'
+      ),
+      type: 'string',
+      nargs: 1,
+      default: '',
+    },
   });
 
 const devPort = argv['dev-port'];
 const servicePort = argv['backend-port'];
+
+const sslKey = fs.readFileSync(argv['ssl-key']);
+const sslCert = fs.readFileSync(argv['ssl-cert']);
 
 const fullImageDir = Path.normalize(argv['img-dir'].startsWith('.')
   ? Path.join(__dirname, argv['img-dir'])
@@ -128,7 +148,9 @@ server.post('/bundle_document', async (req, res) => {
 // Redirect others to Parcel service
 server.use('/', parcelMiddleware);
 
-const serverHandle = server.listen(servicePort, () => {
+const httpServer = https.createServer({ key: sslKey, cert: sslCert }, server);
+
+const serverHandle = httpServer.listen(servicePort, () => {
   process.stdout.write(`Listening to port ${servicePort}...\n`);
 });
 
